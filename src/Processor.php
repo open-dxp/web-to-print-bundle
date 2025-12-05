@@ -29,7 +29,10 @@ use OpenDxp\Logger;
 use OpenDxp\Model;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\LockInterface;
+use Twig\Environment;
+use Twig\Extension\SandboxExtension;
 use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityPolicy;
 
 abstract class Processor
 {
@@ -243,10 +246,11 @@ abstract class Processor
     {
         $document = $params['document'] ?? null;
         $hostUrl = $params['hostUrl'] ?? null;
-        $templatingEngine = \OpenDxp::getContainer()->get('opendxp.templating.engine.delegating');
+        /** @var Environment $twig */
+        $twig = \OpenDxp::getContainer()->get('opendxp.templating');
+        $twig->getExtension(SandboxExtension::class)->enableSandbox();
 
         try {
-            $twig = $templatingEngine->getTwigEnvironment(true);
             $template = $twig->createTemplate($html);
 
             $html = $twig->render($template, $params);
@@ -255,7 +259,7 @@ abstract class Processor
 
             throw new \Exception(sprintf('Failed rendering the print template: %s. Please check your twig sandbox security policy or contact the administrator.', $e->getMessage()));
         } finally {
-            $templatingEngine->disableSandboxExtensionFromTwigEnvironment();
+            $twig->getExtension(SandboxExtension::class)->disableSandbox();
         }
 
         return Mail::setAbsolutePaths($html, $document, $hostUrl);

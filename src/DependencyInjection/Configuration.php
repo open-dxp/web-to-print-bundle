@@ -27,7 +27,6 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('opendxp_web_to_print');
 
-        /** @var ArrayNodeDefinition $rootNode */
         $rootNode = $treeBuilder->getRootNode();
         $rootNode->addDefaultsIfNotSet();
 
