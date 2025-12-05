@@ -118,10 +118,10 @@ class Gotenberg extends Processor
             $chromium = $chromium->pdf();
         } else {
             // gotenberg-php v1 BC Layer for unsupported methods in v2
-            if (isset($params['userAgent']) && method_exists($chromium, 'userAgent')) {
+            if (isset($params['userAgent']) && method_exists($chromium, 'userAgent')) { // @phpstan-ignore-line
                 $chromium->userAgent($params['userAgent']);
             }
-            if (isset($params['pdfFormat'])&& method_exists($chromium, 'pdfFormat')) {
+            if (isset($params['pdfFormat'])&& method_exists($chromium, 'pdfFormat')) { // @phpstan-ignore-line
                 $chromium->pdfFormat($params['pdfFormat']);
             }
         }

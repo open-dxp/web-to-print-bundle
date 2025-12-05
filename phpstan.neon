@@ -7,6 +7,7 @@ parameters:
     excludePaths:
         - '**/Processor/PdfReactor.php'
         - '**/PDFreactor.class.php'
+    reportUnmatchedIgnoredErrors: false
 
 includes:
     - vendor/phpstan/phpstan-symfony/extension.neon
