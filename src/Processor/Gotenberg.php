@@ -114,7 +114,7 @@ class Gotenberg extends Processor
 
         $chromium = GotenbergAPI::chromium(\OpenDxp\Config::getSystemConfiguration('gotenberg')['base_url']);
         // To support gotenberg-php v2 and so on
-        if (method_exists($chromium, 'pdf')) {
+        if (method_exists($chromium, 'pdf')) { // @phpstan-ignore-line
             $chromium = $chromium->pdf();
         } else {
             // gotenberg-php v1 BC Layer for unsupported methods in v2

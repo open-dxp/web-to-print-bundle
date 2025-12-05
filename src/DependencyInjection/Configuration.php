@@ -58,8 +58,6 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('pdfreactorLicence')->end()
                 ->booleanNode('pdfreactorEnableLenientHttpsMode')->end()
                 ->booleanNode('pdfreactorEnableDebugMode')->end()
-                ->scalarNode('chromiumHostUrl')->end()
-                ->scalarNode('chromiumSettings')->end()
                 ->scalarNode('gotenbergHostUrl')->end()
                 ->scalarNode('gotenbergSettings')->end()
             ->end();

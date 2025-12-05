@@ -21,7 +21,6 @@ use OpenDxp\Bundle\WebToPrintBundle\Exception\CancelException;
 use OpenDxp\Bundle\WebToPrintBundle\Exception\NotPreparedException;
 use OpenDxp\Bundle\WebToPrintBundle\Messenger\GenerateWeb2PrintPdfMessage;
 use OpenDxp\Bundle\WebToPrintBundle\Model\Document\PrintAbstract;
-use OpenDxp\Bundle\WebToPrintBundle\Processor\Chromium;
 use OpenDxp\Bundle\WebToPrintBundle\Processor\Gotenberg;
 use OpenDxp\Bundle\WebToPrintBundle\Processor\PdfReactor;
 use OpenDxp\Event\Model\DocumentEvent;
@@ -36,15 +35,13 @@ abstract class Processor
 {
     private static ?LockInterface $lock = null;
 
-    public static function getInstance(): PdfReactor|Gotenberg|Chromium|Processor
+    public static function getInstance(): PdfReactor|Gotenberg|Processor
     {
         $config = Config::getWeb2PrintConfig();
 
-        if ($config['generalTool'] == 'pdfreactor') {
+        if ($config['generalTool'] === 'pdfreactor') {
             return new PdfReactor();
-        } elseif ($config['generalTool'] == 'chromium') {
-            return new Chromium();
-        } elseif ($config['generalTool'] == 'gotenberg') {
+        } elseif ($config['generalTool'] === 'gotenberg') {
             return new Gotenberg();
         } else {
             if (class_exists($config['generalTool'])) {

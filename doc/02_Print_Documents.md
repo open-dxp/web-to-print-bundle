@@ -1,18 +1,14 @@
 # Print Documents
 
-Print documents are the way to create print-ready PDFs directly within Pimcore. 
-They are based on the normal Pimcore documents and therefore support everything as pages do - starting from MVC pattern 
-and template creation to document composing within Pimcore backend with areas, drag&drop etc. 
-
-Web to print flow implemented in Pimcore:
-
-![Web2Print Flow](./img/printdocuments_flow.png)
+Print documents are the way to create print-ready PDFs directly within OpenDXP. 
+They are based on the normal OpenDXP documents and therefore support everything as pages do - starting from MVC pattern 
+and template creation to document composing within OpenDXP backend with areas, drag&drop etc. 
 
 
 Once activated, print documents are integrated into the default documents tree. 
 But of course you can setup your custom views to have separate trees for web documents and print documents. 
-Just use our completely redesigned [custom views](https://github.com/pimcore/pimcore/blob/11.x/doc/05_Objects/01_Object_Classes/05_Class_Settings/20_Custom_Views.md) 
-and all [new perspectives features](https://github.com/pimcore/pimcore/blob/11.x/doc/18_Tools_and_Features/13_Perspectives.md).
+Just use our completely redesigned [custom views](https://github.com/open-dxp/opendxp/blob/1.x/doc/05_Objects/01_Object_Classes/05_Class_Settings/20_Custom_Views.md) 
+and all [new perspectives features](https://github.com/open-dxp/opendxp/blob/1.x/doc/18_Tools_and_Features/13_Perspectives.md).
 
 For more detail-information on the settings see later.
 
@@ -21,7 +17,7 @@ For more detail-information on the settings see later.
 ### PrintPage 
 
 PrintPages are the documents that contain the actual content - with all the areas, editables, images, and so on. 
-They are based on the normal Pimcore documents and to content editing should be quite self explaining.
+They are based on the normal OpenDXP documents and to content editing should be quite self explaining.
 
 ![PrintPages - add new](./img/printdocuments_printpages_menu.png)
 
@@ -36,18 +32,16 @@ that then contain the actual print pages.
 
 ![PrintContainer - tree](./img/printdocuments_printcontainers_tree.png)
 
-Even they don't have content for their own, PrintContainers are based on normal Pimcore documents. 
+Even they don't have content for their own, PrintContainers are based on normal OpenDXP documents. 
 Therefore, they also need a controller and a view. They have to make sure, that all sub pages are included into one single output view. 
-Pimcore ships with default implementations (`Web2PrintController`, `containerAction`) in skeleton and demo installation package. 
+OpenDXP ships with default implementations (`Web2PrintController`, `containerAction`) in skeleton and demo installation package. 
 
 ## PDF Rendering
 
 Both web-to-print documents have an additional tab that is the place for rendering documents to print-ready PDFs.
 When rendering, the print is first rendererd to HTML, then rendered as a Twig template (yes, you can use Twig expressions in the document) and then rendered to an PDF. PDF rendering itself is done by an
-third party renderer. Currently we support [pdfreactor](https://www.pdfreactor.com/), [Chromium](https://chromedevtools.github.io/devtools-protocol/) and [Gotenberg](https://gotenberg.dev/). 
+third party renderer. Currently we support [pdfreactor](https://www.pdfreactor.com/) and [Gotenberg](https://gotenberg.dev/). 
 Please see their documentation for details concerning template possibilities.
-
-![Web2Print - Container editmode](./img/printdocuments_editmode_preview.png)
 
 Depending on the renderer, there might be settings possible for the rendering process. 
 The provided settings might be extended in future. 
@@ -58,7 +52,7 @@ Print document renders user controlled twig templates in a sandbox with restrict
 security policies for tags, filters & functions. Please use following configuration to allow more in template rendering:
 
 ```yaml
-    pimcore:
+    opendxp:
           templating_engine:
               twig:
                 sandbox_security_policy:
@@ -71,10 +65,6 @@ security policies for tags, filters & functions. Please use following configurat
 
 **Printermarks**: With PDFreactor there comes a out-of-the-box feature to add printermarks to the PDF. 
 They can be activated by the printermarks rendering setting. Technically they are implemented by an additional CSS-file which needs to be included.
-For Details, check links below:
-
-* [view-script](https://github.com/pimcore/demo/blob/11.x/templates/layouts/print_catalog.html.twig#L18-L20)
-* [css-file](https://github.com/pimcore/web-to-print-bundle/blob/1.x/public/css/print/print-printermarks.css)
 
 ## Settings
 In the web-to-print settings, the used PDF renderer is specified. Depending on the renderer, there are additional settings to be made. 

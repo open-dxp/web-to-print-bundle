@@ -50,13 +50,13 @@ class PrintCatalogExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('app_print_output_spec_value', [$this, 'getSpecValue']),
-            new TwigFunction('app_print_create_register', [$this, 'createRegisterTitleStyling']),
-            new TwigFunction('app_print_get_register_name', [$this, 'getRegisterName']),
+            new TwigFunction('app_print_output_spec_value', $this->getSpecValue(...)),
+            new TwigFunction('app_print_create_register', $this->createRegisterTitleStyling(...)),
+            new TwigFunction('app_print_get_register_name', $this->getRegisterName(...)),
         ];
     }
 
-    public function getSpecValue(\stdClass $outputElement, string $thumbnailName = null): string
+    public function getSpecValue(\stdClass $outputElement, ?string $thumbnailName = null): string
     {
         if ($outputElement->value instanceof Image) {
             return $this->printImage($outputElement->value, $thumbnailName);
