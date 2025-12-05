@@ -32,7 +32,6 @@ use Symfony\Component\Lock\LockInterface;
 use Twig\Environment;
 use Twig\Extension\SandboxExtension;
 use Twig\Sandbox\SecurityError;
-use Twig\Sandbox\SecurityPolicy;
 
 abstract class Processor
 {
