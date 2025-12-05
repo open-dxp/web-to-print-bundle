@@ -1,0 +1,14 @@
+_opendxp_web2print_backend:
+    resource: "../../src/Controller/"
+    type:     attribute
+    prefix:   /admin/bundle/web2print
+    options:
+        expose: true
+
+
+_opendxp_web2print_document:
+    resource: "../../src/Controller/Document/"
+    type:     attribute
+    prefix:   /admin/bundle/web2print/document
+    options:
+        expose: true

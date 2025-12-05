@@ -1,0 +1,4 @@
+class_name: UnitTester
+modules:
+    enabled:
+        - \OpenDxp\Bundle\WebToPrintBundle\Tests\Helper\Unit

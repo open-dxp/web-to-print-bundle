@@ -1,0 +1,45 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    #
+    # INSTALLER
+    #
+
+    OpenDxp\Bundle\WebToPrintBundle\Installer:
+        public: true
+        arguments:
+            $bundle: "@=service('kernel').getBundle('OpenDxpWebToPrintBundle')"
+
+    #
+    # CONTROLLERS
+    #
+
+    # auto-register all controllers as services
+    OpenDxp\Bundle\WebToPrintBundle\Controller\:
+        resource: '../src/Controller'
+        public: true
+        tags: ['controller.service_arguments']
+
+
+    # TWIG TEMPLATING
+    OpenDxp\Bundle\WebToPrintBundle\Twig\Extension\DocumentHelperExtensions:
+        tags: [ 'twig.extension' ]
+
+    OpenDxp\Bundle\WebToPrintBundle\Twig\Extension\PrintCatalogExtension:
+        tags: [ 'twig.extension' ]
+
+    #
+    # Event Listeners
+    #
+
+    OpenDxp\Bundle\WebToPrintBundle\EventListener\IndexSettingsListener:
+        tags:
+            - { name: kernel.event_listener, event: opendxp.admin.indexAction.settings, method: indexSettings }
+
+    OpenDxp\Bundle\WebToPrintBundle\Messenger\Handler\GenerateWeb2PrintPdfHandler:
+        arguments:
+            - '@logger'
+        tags:
+            - { name: messenger.message_handler }
