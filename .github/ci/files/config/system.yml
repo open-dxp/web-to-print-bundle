@@ -56,7 +56,7 @@ opendxp:
         archive_treshold: '30'
         archive_alternative_database: ''
     gotenberg:
-        base_url: '%env(PIMCORE_TEST_GOTENBERG_DNS)%'
+        base_url: '%env(OPENDXP_TEST_GOTENBERG_DNS)%'
 opendxp_admin:
     branding:
         color_login_screen: ''
