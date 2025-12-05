@@ -1,4 +1,4 @@
-namespace: Pimcore\Bundle\WebToPrintBundle\Tests
+namespace: OpenDxp\Bundle\WebToPrintBundle\Tests
 actor: Tester
 bootstrap: _bootstrap.php
 paths:
