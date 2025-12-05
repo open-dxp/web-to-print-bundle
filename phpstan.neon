@@ -7,8 +7,7 @@ parameters:
     excludePaths:
         - '**/Processor/PdfReactor.php'
         - '**/PDFreactor.class.php'
-    checkGenericClassInNonGenericObjectType: false
-    checkMissingIterableValueType: false
+    reportUnmatchedIgnoredErrors: false
 
 includes:
     - vendor/phpstan/phpstan-symfony/extension.neon

@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 include __DIR__ . "/../vendor/autoload.php";
 
-define('PIMCORE_PROJECT_ROOT', __DIR__ . '/..');
+define('OPENDXP_PROJECT_ROOT', __DIR__ . '/..');
 define('APP_ENV', 'test');
 
 \OpenDxp\Bootstrap::setProjectRoot();

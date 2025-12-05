@@ -18,7 +18,6 @@ namespace OpenDxp\Bundle\WebToPrintBundle\Controller;
 
 use OpenDxp\Bundle\WebToPrintBundle\Config;
 use OpenDxp\Bundle\WebToPrintBundle\Processor;
-use OpenDxp\Bundle\WebToPrintBundle\Processor\Chromium;
 use OpenDxp\Bundle\WebToPrintBundle\Processor\Gotenberg;
 use OpenDxp\Bundle\WebToPrintBundle\Processor\PdfReactor;
 use OpenDxp\Controller\Traits\JsonHelperTrait;
@@ -94,9 +93,6 @@ class SettingsController extends UserAwareController
         } elseif ($adapter instanceof Gotenberg) {
             $params = Config::getWeb2PrintConfig();
             $params = json_decode($params['gotenbergSettings'], true) ?: [];
-        } elseif ($adapter instanceof Chromium) {
-            $params = Config::getWeb2PrintConfig();
-            $params = json_decode($params['chromiumSettings'], true) ?: [];
         }
 
         $responseOptions = [

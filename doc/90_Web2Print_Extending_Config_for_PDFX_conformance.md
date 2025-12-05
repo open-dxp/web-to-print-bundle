@@ -1,6 +1,6 @@
 # Extending PDF Creation Config for PDF/X Conformance
 
-Sometimes it is necessary to add additional configuration options to the PDF processing configuration in the Pimcore backend UI - 
+Sometimes it is necessary to add additional configuration options to the PDF processing configuration in the OpenDXP backend UI - 
 for example when creating PDF/X conform PDFs with PDF Reactor.
 
 ![Config Options](./img/configs.jpg)
@@ -10,12 +10,12 @@ creating the file.
 
 **Solution**
 
-To do so, Pimcore provides two events:
-- [`PRINT_MODIFY_PROCESSING_OPTIONS`](https://github.com/pimcore/web-to-print-bundle/blob/1.x/src/Event/DocumentEvents.php#L56):
-  Event to modify the processing options displayed in the Pimcore backend UI. For example add additional options like `AppendLog` and `My Additional ...` 
+To do so, OpenDXP provides two events:
+- [`PRINT_MODIFY_PROCESSING_OPTIONS`](https://github.com/open-dxp/web-to-print-bundle/blob/1.x/src/Event/DocumentEvents.php#L56):
+  Event to modify the processing options displayed in the OpenDXP backend UI. For example add additional options like `AppendLog` and `My Additional ...` 
   in the screenshot above. 
   
-- [`PRINT_MODIFY_PROCESSING_CONFIG`](https://github.com/pimcore/web-to-print-bundle/blob/1.x/src/Event/DocumentEvents.php#L73)
+- [`PRINT_MODIFY_PROCESSING_CONFIG`](https://github.com/open-dxp/web-to-print-bundle/blob/1.x/src/Event/DocumentEvents.php#L73)
   Event to modify the configuration for the PDF processor when the PDF gets created. For example read values for additional
   options and apply these values to the configuration of the PDF processor accordingly or do some other stuff. 
   
@@ -27,8 +27,8 @@ Services in Container:
  app.event_listener.test:
         class: App\EventListener\PDFConfigListener
         tags:
-            - { name: kernel.event_listener, event: pimcore.document.print.processor.modifyProcessingOptions, method: modifyProcessingOptions }
-            - { name: kernel.event_listener, event: pimcore.document.print.processor.modifyConfig, method: modifyConfig }
+            - { name: kernel.event_listener, event: opendxp.document.print.processor.modifyProcessingOptions, method: modifyProcessingOptions }
+            - { name: kernel.event_listener, event: opendxp.document.print.processor.modifyConfig, method: modifyConfig }
 ```
 
 Implementation of Listener
@@ -39,13 +39,13 @@ namespace App\EventListener;
 
 class PDFConfigListener
 {
-    public function modifyProcessingOptions(\Pimcore\Bundle\WebToPrintBundle\Event\Model\PrintConfigEvent $event): void
+    public function modifyProcessingOptions(\OpenDxp\Bundle\WebToPrintBundle\Event\Model\PrintConfigEvent $event): void
     {
         $arguments = $event->getArguments();
         $options = $arguments['options'];
 
         $processor = $event->getProcessor();
-        if ($processor instanceof \Pimcore\Bundle\WebToPrintBundle\Processor\PdfReactor) {
+        if ($processor instanceof \OpenDxp\Bundle\WebToPrintBundle\Processor\PdfReactor) {
             
             //add option to append log into generated PDF (pdf reactor functionality) 
             $options[] = ['name' => 'appendLog', 'type' => 'bool', 'default' => false];
@@ -55,12 +55,12 @@ class PDFConfigListener
         $event->setArguments($arguments);
     }
 
-    public function modifyConfig(\Pimcore\Bundle\WebToPrintBundle\Event\Model\PrintConfigEvent $event): void
+    public function modifyConfig(\OpenDxp\Bundle\WebToPrintBundle\Event\Model\PrintConfigEvent $event): void
     {
         $arguments = $event->getArguments();
 
         $processor = $event->getProcessor();
-        if ($processor instanceof \Pimcore\Bundle\WebToPrintBundle\Processor\PdfReactor) {
+        if ($processor instanceof \OpenDxp\Bundle\WebToPrintBundle\Processor\PdfReactor) {
             
             //check if option for appending log to PDF is set in configuration and apply it to reactor config accordingly  
             if ($arguments['config']->appendLog == 'true'){
@@ -87,17 +87,17 @@ namespace App\EventListener;
 
 class PDFConfigListener
 {
-    public function modifyProcessingOptions(\Pimcore\Bundle\WebToPrintBundle\Event\Model\PrintConfigEvent $event): void
+    public function modifyProcessingOptions(\OpenDxp\Bundle\WebToPrintBundle\Event\Model\PrintConfigEvent $event): void
     {
         //optionally add some configuration options for user interface here - e.g. some select options for user
     }
 
-    public function modifyConfig(\Pimcore\Bundle\WebToPrintBundle\Event\Model\PrintConfigEvent $event): void
+    public function modifyConfig(\OpenDxp\Bundle\WebToPrintBundle\Event\Model\PrintConfigEvent $event): void
     {
         $arguments = $event->getArguments();
 
         $processor = $event->getProcessor();
-        if($processor instanceof \Pimcore\Bundle\WebToPrintBundle\Processor\PdfReactor) {
+        if($processor instanceof \OpenDxp\Bundle\WebToPrintBundle\Processor\PdfReactor) {
             
             //Set pdf reactor config for generating PDF/X conform PDF  
             $arguments['reactorConfig']['conformance'] = \Conformance::PDFX4;

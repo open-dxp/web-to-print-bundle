@@ -1,2 +1,7 @@
 parameters:
-	ignoreErrors:
+    ignoreErrors:
+        - identifier: missingType.iterableValue
+        - identifier: missingType.generics
+        -
+            message: '#Dead catch - Twig\\Sandbox\\SecurityError is never thrown in the try block.#'
+            path: src/Processor.php

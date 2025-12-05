@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace OpenDxp\Bundle\WebToPrintBundle\DependencyInjection;
 
 use OpenDxp\Bundle\CoreBundle\DependencyInjection\ConfigurationHelper;
-use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -27,7 +26,6 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('opendxp_web_to_print');
 
-        /** @var ArrayNodeDefinition $rootNode */
         $rootNode = $treeBuilder->getRootNode();
         $rootNode->addDefaultsIfNotSet();
 
@@ -58,8 +56,6 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('pdfreactorLicence')->end()
                 ->booleanNode('pdfreactorEnableLenientHttpsMode')->end()
                 ->booleanNode('pdfreactorEnableDebugMode')->end()
-                ->scalarNode('chromiumHostUrl')->end()
-                ->scalarNode('chromiumSettings')->end()
                 ->scalarNode('gotenbergHostUrl')->end()
                 ->scalarNode('gotenbergSettings')->end()
             ->end();

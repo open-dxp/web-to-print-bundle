@@ -26,7 +26,6 @@ services:
             OPENDXP_TEST_DB_DSN: "mysql://opendxp:opendxp@db:3306/opendxp_test"
             OPENDXP_TEST_REDIS_DSN: "redis://redis:6379"
             OPENDXP_TEST_GOTENBERG_DNS: "http://gotenberg:3000"
-            OPENDXP_TEST_CHROMIUM_DNS: "ws://chrome:3000/"
         depends_on:
             - db
         volumes:

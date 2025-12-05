@@ -21,7 +21,6 @@ use OpenDxp\Bundle\WebToPrintBundle\Exception\CancelException;
 use OpenDxp\Bundle\WebToPrintBundle\Exception\NotPreparedException;
 use OpenDxp\Bundle\WebToPrintBundle\Messenger\GenerateWeb2PrintPdfMessage;
 use OpenDxp\Bundle\WebToPrintBundle\Model\Document\PrintAbstract;
-use OpenDxp\Bundle\WebToPrintBundle\Processor\Chromium;
 use OpenDxp\Bundle\WebToPrintBundle\Processor\Gotenberg;
 use OpenDxp\Bundle\WebToPrintBundle\Processor\PdfReactor;
 use OpenDxp\Event\Model\DocumentEvent;
@@ -30,21 +29,21 @@ use OpenDxp\Logger;
 use OpenDxp\Model;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\LockInterface;
+use Twig\Environment;
+use Twig\Extension\SandboxExtension;
 use Twig\Sandbox\SecurityError;
 
 abstract class Processor
 {
     private static ?LockInterface $lock = null;
 
-    public static function getInstance(): PdfReactor|Gotenberg|Chromium|Processor
+    public static function getInstance(): PdfReactor|Gotenberg|Processor
     {
         $config = Config::getWeb2PrintConfig();
 
-        if ($config['generalTool'] == 'pdfreactor') {
+        if ($config['generalTool'] === 'pdfreactor') {
             return new PdfReactor();
-        } elseif ($config['generalTool'] == 'chromium') {
-            return new Chromium();
-        } elseif ($config['generalTool'] == 'gotenberg') {
+        } elseif ($config['generalTool'] === 'gotenberg') {
             return new Gotenberg();
         } else {
             if (class_exists($config['generalTool'])) {
@@ -246,10 +245,11 @@ abstract class Processor
     {
         $document = $params['document'] ?? null;
         $hostUrl = $params['hostUrl'] ?? null;
-        $templatingEngine = \OpenDxp::getContainer()->get('opendxp.templating.engine.delegating');
+        /** @var Environment $twig */
+        $twig = \OpenDxp::getContainer()->get('opendxp.templating');
+        $twig->getExtension(SandboxExtension::class)->enableSandbox();
 
         try {
-            $twig = $templatingEngine->getTwigEnvironment(true);
             $template = $twig->createTemplate($html);
 
             $html = $twig->render($template, $params);
@@ -258,7 +258,7 @@ abstract class Processor
 
             throw new \Exception(sprintf('Failed rendering the print template: %s. Please check your twig sandbox security policy or contact the administrator.', $e->getMessage()));
         } finally {
-            $templatingEngine->disableSandboxExtensionFromTwigEnvironment();
+            $twig->getExtension(SandboxExtension::class)->disableSandbox();
         }
 
         return Mail::setAbsolutePaths($html, $document, $hostUrl);

@@ -24,7 +24,7 @@ use OpenDxp\Tests\Support\Test\ModelTestCase;
 /**
  * Class DocumentTest
  *
- * @package Pimcore\Tests\Model\Document
+ * @package OpenDxp\Tests\Model\Document
  *
  * @group model.document.document
  */
