@@ -31,11 +31,11 @@ use OpenDxp\Logger;
 class PdfReactor extends Processor
 {
     //Legacy constants, needed for compatibility reasons
-    private const JAVA_SCRIPT_MODE_DISABLED = 'DISABLED';
+    private const string JAVA_SCRIPT_MODE_DISABLED = 'DISABLED';
 
-    private const JAVA_SCRIPT_MODE_ENABLED = 'ENABLED';
+    private const string JAVA_SCRIPT_MODE_ENABLED = 'ENABLED';
 
-    private const JAVA_SCRIPT_MODE_ENABLED_NO_LAYOUT = 'ENABLED_NO_LAYOUT';
+    private const string JAVA_SCRIPT_MODE_ENABLED_NO_LAYOUT = 'ENABLED_NO_LAYOUT';
 
     /**
      * returns the default web2print config
