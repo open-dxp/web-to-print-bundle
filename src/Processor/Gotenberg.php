@@ -113,18 +113,7 @@ class Gotenberg extends Processor
         $tempFileName = uniqid('web2print_');
 
         $chromium = GotenbergAPI::chromium(\OpenDxp\Config::getSystemConfiguration('gotenberg')['base_url']);
-        // To support gotenberg-php v2 and so on
-        if (method_exists($chromium, 'pdf')) { // @phpstan-ignore-line
-            $chromium = $chromium->pdf();
-        } else {
-            // gotenberg-php v1 BC Layer for unsupported methods in v2
-            if (isset($params['userAgent']) && method_exists($chromium, 'userAgent')) { // @phpstan-ignore-line
-                $chromium->userAgent($params['userAgent']);
-            }
-            if (isset($params['pdfFormat'])&& method_exists($chromium, 'pdfFormat')) { // @phpstan-ignore-line
-                $chromium->pdfFormat($params['pdfFormat']);
-            }
-        }
+        $chromium = $chromium->pdf();
 
         $options = [
             'printBackground', 'landscape', 'preferCssPageSize', 'omitBackground', 'emulatePrintMediaType',
@@ -166,8 +155,7 @@ class Gotenberg extends Processor
             $chromium->extraHttpHeaders($params['extraHttpHeaders']);
         }
 
-        // metadata is only passed on gotenberg-php > 2.2
-        if (isset($params['metadata']) && method_exists($chromium, 'metadata')) {
+        if (isset($params['metadata'])) {
             $chromium->metadata($params['metadata']);
         }
 
