@@ -61,6 +61,12 @@ class ProcessorTest extends ModelTestCase
         $this->checkProcessors('PdfReactor', $pdfReactorConfig);
     }
 
+    public function testDomPdf()
+    {
+        $this->checkProcessors('DomPdf', ['orientation' => 'portrait', 'landscape' => false]);
+        $this->checkProcessors('DomPdf', ['orientation' => 'landscape', 'landscape' => true]);
+    }
+
     public function checkProcessors(string $processorName, array $config): void
     {
 

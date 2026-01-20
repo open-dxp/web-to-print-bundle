@@ -29,7 +29,8 @@
     "gotenberg/gotenberg-php": "<2.2.0"
   },
   "suggest": {
-    "gotenberg/gotenberg-php": "Required for generating pdf via Gotenberg in assets preview (LibreOffice), page preview, version diff and web2print"
+    "gotenberg/gotenberg-php": "Required for generating pdf via Gotenberg in assets preview (LibreOffice), page preview, version diff and web2print",
+    "dompdf/dompdf": "Required for generating pdf via Dompdf"
   },
   "autoload": {
     "psr-4": {

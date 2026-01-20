@@ -79,7 +79,7 @@ opendxp.bundle.web2print.settings = Class.create({
                 hidden: this.getValue("generalTool") != 'pdfreactor',
                 autoHeight: true,
                 defaultType: 'textfield',
-                defaults: {width: 450},
+                defaults: { width: 450 },
                 items: [
                     {
                         fieldLabel: t("web2print_protocol"),
@@ -94,20 +94,20 @@ opendxp.bundle.web2print.settings = Class.create({
                         ],
                         mode: "local",
                         triggerAction: "all"
-                    },{
+                    }, {
                         xtype: 'textfield',
                         width: 650,
                         fieldLabel: t("web2print_server"),
                         name: 'pdfreactorServer',
                         value: this.getValue("pdfreactorServer")
-                    },{
+                    }, {
                         xtype: 'textfield',
                         width: 650,
                         fieldLabel: t("web2print_port"),
                         name: 'pdfreactorServerPort',
                         value: this.getValue("pdfreactorServerPort"),
                         emptyText: "9423"
-                    },{
+                    }, {
                         xtype: 'textfield',
                         width: 650,
                         fieldLabel: t("web2print_baseURL"),
@@ -120,7 +120,7 @@ opendxp.bundle.web2print.settings = Class.create({
                         value: t('web2print_baseURL_txt'),
                         emptyText: "http://my-domain.org",
                         cls: "opendxp_extra_label_bottom"
-                    },{
+                    }, {
                         xtype: 'textfield',
                         width: 650,
                         fieldLabel: t("web2print_apiKey"),
@@ -132,7 +132,7 @@ opendxp.bundle.web2print.settings = Class.create({
                         width: 600,
                         value: t('web2print_apiKey_txt'),
                         cls: "opendxp_extra_label_bottom"
-                    },{
+                    }, {
                         xtype: 'textarea',
                         width: 650,
                         height: 200,
@@ -166,7 +166,7 @@ opendxp.bundle.web2print.settings = Class.create({
                 autoHeight: true,
                 hidden: this.getValue("generalTool") != 'gotenberg',
                 defaultType: 'textfield',
-                defaults: {width: 450},
+                defaults: { width: 450 },
                 items: [
                     {
                         xtype: "displayfield",
@@ -174,7 +174,7 @@ opendxp.bundle.web2print.settings = Class.create({
                         name: 'additions',
                         width: 850,
                         value: t('web2print_gotenberg_documentation_additions_text'),
-                    },{
+                    }, {
                         xtype: 'textfield',
                         width: 650,
                         fieldLabel: t("web2print_hostURL"),
@@ -188,24 +188,24 @@ opendxp.bundle.web2print.settings = Class.create({
                         fieldLabel: t("web2print_gotenberg_settings"),
                         name: 'gotenbergSettings',
                         value: this.getValue("gotenbergSettings")
-                    },{
+                    }, {
                         xtype: "displayfield",
                         fieldLabel: t("web2print_gotenberg_documentation"),
                         name: 'documentation',
                         width: 600,
                         value: t('web2print_gotenberg_options_documentation'),
-                        autoEl:{
+                        autoEl: {
                             tag: 'a',
                             target: '_blank',
                             href: "https://gotenberg.dev/docs/routes#page-properties-chromium",
                         }
-                    },{
+                    }, {
                         xtype: "displayfield",
                         fieldLabel: t("web2print_json_converter"),
                         name: 'json_converter',
                         width: 600,
                         value: t('web2print_json_converter_link'),
-                        autoEl:{
+                        autoEl: {
                             tag: 'a',
                             target: '_blank',
                             href: "https://jsonformatter.org/",
@@ -257,6 +257,7 @@ opendxp.bundle.web2print.settings = Class.create({
                                 store: [
                                     ["pdfreactor", "PDFreactor"],
                                     ["gotenberg", "Gotenberg Chromium"],
+                                    ["dompdf", "Dompdf"],
                                 ],
                                 mode: "local",
                                 triggerAction: "all",

@@ -23,6 +23,7 @@ use OpenDxp\Bundle\WebToPrintBundle\Messenger\GenerateWeb2PrintPdfMessage;
 use OpenDxp\Bundle\WebToPrintBundle\Model\Document\PrintAbstract;
 use OpenDxp\Bundle\WebToPrintBundle\Processor\Gotenberg;
 use OpenDxp\Bundle\WebToPrintBundle\Processor\PdfReactor;
+use OpenDxp\Bundle\WebToPrintBundle\Processor\DomPdf;
 use OpenDxp\Event\Model\DocumentEvent;
 use OpenDxp\Helper\Mail;
 use OpenDxp\Logger;
@@ -45,6 +46,8 @@ abstract class Processor
             return new PdfReactor();
         } elseif ($config['generalTool'] === 'gotenberg') {
             return new Gotenberg();
+        } elseif ($config['generalTool'] === 'dompdf') {
+            return new DomPdf();
         } else {
             if (class_exists($config['generalTool'])) {
                 $generalToolClass = new $config['generalTool']();
@@ -87,7 +90,7 @@ abstract class Processor
             return true;
         }
 
-        return (bool)self::getInstance()->startPdfGeneration($jobConfig->documentId);
+        return (bool) self::getInstance()->startPdfGeneration($jobConfig->documentId);
     }
 
     /**
