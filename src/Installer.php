@@ -10,13 +10,14 @@ declare(strict_types=1);
  * LICENSE.md which is distributed with this source code.
  *
  * @copyright  Copyright (c) Pimcore GmbH (https://pimcore.com)
- * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.ch)
+ * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.io)
  * @license    https://www.gnu.org/licenses/gpl-3.0.html  GNU General Public License version 3 (GPLv3)
  */
 
 namespace OpenDxp\Bundle\WebToPrintBundle;
 
 use Doctrine\DBAL\ArrayParameterType;
+use Exception;
 use OpenDxp\Db;
 use OpenDxp\Extension\Bundle\Installer\SettingsStoreAwareInstaller;
 use OpenDxp\Model\Tool\SettingsStore;
@@ -121,7 +122,7 @@ class Installer extends SettingsStoreAwareInstaller
             $typeColumn = $result->fetchAllAssociative();
 
             return explode("','", preg_replace("/(enum)\('(.+?)'\)/", '\\2', $typeColumn[0]['Type']));
-        } catch (\Exception) {
+        } catch (Exception) {
             // nothing to do here if it does not work we return the standard types
         }
 

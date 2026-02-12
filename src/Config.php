@@ -10,12 +10,14 @@ declare(strict_types=1);
  * LICENSE.md which is distributed with this source code.
  *
  * @copyright  Copyright (c) Pimcore GmbH (https://pimcore.com)
- * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.ch)
+ * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.io)
  * @license    https://www.gnu.org/licenses/gpl-3.0.html  GNU General Public License version 3 (GPLv3)
  */
 
 namespace OpenDxp\Bundle\WebToPrintBundle;
 
+use Exception;
+use OpenDxp;
 use OpenDxp\Cache\RuntimeCache;
 use OpenDxp\Config\LocationAwareConfigRepository;
 use OpenDxp\Model\Exception\ConfigWriteException;
@@ -33,7 +35,7 @@ final class Config
     {
         if (!self::$locationAwareConfigRepository) {
             $config = [];
-            $containerConfig = \OpenDxp::getContainer()->getParameter('opendxp_web_to_print');
+            $containerConfig = OpenDxp::getContainer()->getParameter('opendxp_web_to_print');
             if ($containerConfig['generalTool']) {
                 $config = [
                     self::CONFIG_ID => $containerConfig,
@@ -53,8 +55,7 @@ final class Config
     }
 
     /**
-     *
-     * @throws \Exception
+     * @throws Exception
      */
     public static function isWriteable(): bool
     {
@@ -71,8 +72,7 @@ final class Config
     }
 
     /**
-     *
-     * @throws \Exception
+     * @throws Exception
      */
     public static function save(array $data): void
     {

@@ -10,13 +10,14 @@ declare(strict_types=1);
  * LICENSE.md which is distributed with this source code.
  *
  * @copyright  Copyright (c) Pimcore GmbH (https://pimcore.com)
- * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.ch)
+ * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.io)
  * @license    https://www.gnu.org/licenses/gpl-3.0.html  GNU General Public License version 3 (GPLv3)
  */
 
 namespace OpenDxp\Bundle\WebToPrintBundle\Controller\Document;
 
 use Exception;
+use OpenDxp;
 use OpenDxp\Bundle\AdminBundle\Controller\Admin\Document\DocumentControllerBase;
 use OpenDxp\Bundle\WebToPrintBundle\Config;
 use OpenDxp\Bundle\WebToPrintBundle\Model\Document\PrintAbstract;
@@ -171,10 +172,10 @@ abstract class PrintpageControllerBase extends DocumentControllerBase
                     $createValues['contentMainDocumentId'] = $request->request->getInt('inheritanceSource');
                 }
 
-                $className = \OpenDxp::getContainer()->get('opendxp.class.resolver.document')->resolve($request->request->getString('type'));
+                $className = OpenDxp::getContainer()->get('opendxp.class.resolver.document')->resolve($request->request->getString('type'));
 
                 /** @var Document $document */
-                $document = \OpenDxp::getContainer()->get('opendxp.model.factory')->build($className);
+                $document = OpenDxp::getContainer()->get('opendxp.model.factory')->build($className);
 
                 $document = $document::create($parentDocument->getId(), $createValues);
 
@@ -388,8 +389,6 @@ abstract class PrintpageControllerBase extends DocumentControllerBase
 
     /**
      * Checks if a file exists on the filesystem.
-     *
-     *
      */
     private function checkFileExists(string $filePath): bool
     {
@@ -401,8 +400,6 @@ abstract class PrintpageControllerBase extends DocumentControllerBase
     /**
      * Invalidates the FS cache for a given file path by opening and closing the directory.
      * This is a workaround for a bug which happens when the local filesystem is using a NFS with cache.
-     *
-     *
      */
     private function invalidateFsCacheFor(string $filePath): void
     {

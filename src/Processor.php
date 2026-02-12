@@ -10,24 +10,27 @@ declare(strict_types=1);
  * LICENSE.md which is distributed with this source code.
  *
  * @copyright  Copyright (c) Pimcore GmbH (https://pimcore.com)
- * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.ch)
+ * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.io)
  * @license    https://www.gnu.org/licenses/gpl-3.0.html  GNU General Public License version 3 (GPLv3)
  */
 
 namespace OpenDxp\Bundle\WebToPrintBundle;
 
+use Exception;
+use OpenDxp;
 use OpenDxp\Bundle\WebToPrintBundle\Event\DocumentEvents;
 use OpenDxp\Bundle\WebToPrintBundle\Exception\CancelException;
 use OpenDxp\Bundle\WebToPrintBundle\Exception\NotPreparedException;
 use OpenDxp\Bundle\WebToPrintBundle\Messenger\GenerateWeb2PrintPdfMessage;
 use OpenDxp\Bundle\WebToPrintBundle\Model\Document\PrintAbstract;
+use OpenDxp\Bundle\WebToPrintBundle\Processor\DomPdf;
 use OpenDxp\Bundle\WebToPrintBundle\Processor\Gotenberg;
 use OpenDxp\Bundle\WebToPrintBundle\Processor\PdfReactor;
-use OpenDxp\Bundle\WebToPrintBundle\Processor\DomPdf;
 use OpenDxp\Event\Model\DocumentEvent;
 use OpenDxp\Helper\Mail;
 use OpenDxp\Logger;
 use OpenDxp\Model;
+use stdClass;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\LockInterface;
 use Twig\Environment;
@@ -57,23 +60,21 @@ abstract class Processor
             }
         }
 
-        throw new \Exception('Invalid Configuration - ' . $config['generalTool']);
+        throw new Exception('Invalid Configuration - ' . $config['generalTool']);
     }
 
     /**
-     *
-     *
-     * @throws \Exception
+     * @throws Exception
      */
     public function preparePdfGeneration(int $documentId, array $config): bool
     {
         $document = $this->getPrintDocument($documentId);
         if (Model\Tool\TmpStore::get($document->getLockKey())) {
-            throw new \Exception('Process with given document already running.');
+            throw new Exception('Process with given document already running.');
         }
         Model\Tool\TmpStore::add($document->getLockKey(), true);
 
-        $jobConfig = new \stdClass();
+        $jobConfig = new stdClass();
         $jobConfig->documentId = $documentId;
         $jobConfig->config = $config;
 
@@ -83,7 +84,7 @@ abstract class Processor
         $disableBackgroundExecution = $config['disableBackgroundExecution'] ?? false;
 
         if (!$disableBackgroundExecution) {
-            \OpenDxp::getContainer()->get('messenger.bus.opendxp-core')->dispatch(
+            OpenDxp::getContainer()->get('messenger.bus.opendxp-core')->dispatch(
                 new GenerateWeb2PrintPdfMessage($jobConfig->documentId)
             );
 
@@ -94,8 +95,6 @@ abstract class Processor
     }
 
     /**
-     *
-     *
      * @throws Model\Element\ValidationException
      * @throws NotPreparedException
      */
@@ -119,7 +118,7 @@ abstract class Processor
                 'processor' => $this,
                 'jobConfig' => $jobConfigFile->config,
             ]);
-            \OpenDxp::getEventDispatcher()->dispatch($preEvent, DocumentEvents::PRINT_PRE_PDF_GENERATION);
+            OpenDxp::getEventDispatcher()->dispatch($preEvent, DocumentEvents::PRINT_PRE_PDF_GENERATION);
 
             $pdf = $this->buildPdf($document, $jobConfigFile->config);
             file_put_contents($document->getPdfFileName(), $pdf);
@@ -128,14 +127,14 @@ abstract class Processor
                 'filename' => $document->getPdfFileName(),
                 'pdf' => $pdf,
             ]);
-            \OpenDxp::getEventDispatcher()->dispatch($postEvent, DocumentEvents::PRINT_POST_PDF_GENERATION);
+            OpenDxp::getEventDispatcher()->dispatch($postEvent, DocumentEvents::PRINT_POST_PDF_GENERATION);
 
             $document->setLastGenerated((time() + 1));
             $document->setLastGenerateMessage('');
             $document->save();
         } catch (CancelException $e) {
             Logger::debug($e->getMessage());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Logger::err((string) $e);
             $document->setLastGenerateMessage($e->getMessage());
             $document->save();
@@ -150,20 +149,18 @@ abstract class Processor
     }
 
     /**
-     *
-     *
-     * @throws \Exception
+     * @throws Exception
      */
     abstract protected function buildPdf(PrintAbstract $document, object $config): string;
 
-    protected function saveJobConfigObjectFile(\stdClass $jobConfig): bool
+    protected function saveJobConfigObjectFile(stdClass $jobConfig): bool
     {
         file_put_contents(static::getJobConfigFile($jobConfig->documentId), json_encode($jobConfig));
 
         return true;
     }
 
-    protected function loadJobConfigObject(int $documentId): ?\stdClass
+    protected function loadJobConfigObject(int $documentId): ?stdClass
     {
         $file = static::getJobConfigFile($documentId);
         if (file_exists($file)) {
@@ -174,15 +171,13 @@ abstract class Processor
     }
 
     /**
-     *
-     *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getPrintDocument(int $documentId): PrintAbstract
     {
         $document = PrintAbstract::getById($documentId);
         if (empty($document)) {
-            throw new \Exception('PrintDocument with ' . $documentId . ' not found.');
+            throw new Exception('PrintDocument with ' . $documentId . ' not found.');
         }
 
         return $document;
@@ -196,7 +191,6 @@ abstract class Processor
     abstract public function getProcessingOptions(): array;
 
     /**
-     *
      * @throws CancelException
      */
     protected function updateStatus(int $documentId, int $status, string $statusUpdate): void
@@ -224,14 +218,13 @@ abstract class Processor
     }
 
     /**
-     *
-     * @throws \Exception
+     * @throws Exception
      */
     public function cancelGeneration(int $documentId): void
     {
         $document = PrintAbstract::getById($documentId);
         if (empty($document)) {
-            throw new \Exception('Document with id ' . $documentId . ' not found.');
+            throw new Exception('Document with id ' . $documentId . ' not found.');
         }
 
         $this->getLock($document)->release();
@@ -240,16 +233,14 @@ abstract class Processor
     }
 
     /**
-     *
-     *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function processHtml(string $html, array $params): string
     {
         $document = $params['document'] ?? null;
         $hostUrl = $params['hostUrl'] ?? null;
         /** @var Environment $twig */
-        $twig = \OpenDxp::getContainer()->get('opendxp.templating');
+        $twig = OpenDxp::getContainer()->get('opendxp.templating');
         $twig->getExtension(SandboxExtension::class)->enableSandbox();
 
         try {
@@ -259,7 +250,7 @@ abstract class Processor
         } catch (SecurityError $e) {
             Logger::err((string) $e);
 
-            throw new \Exception(sprintf('Failed rendering the print template: %s. Please check your twig sandbox security policy or contact the administrator.', $e->getMessage()));
+            throw new Exception(sprintf('Failed rendering the print template: %s. Please check your twig sandbox security policy or contact the administrator.', $e->getMessage()));
         } finally {
             $twig->getExtension(SandboxExtension::class)->disableSandbox();
         }
@@ -270,7 +261,7 @@ abstract class Processor
     protected function getLock(PrintAbstract $document): LockInterface
     {
         if (!self::$lock) {
-            self::$lock = \OpenDxp::getContainer()->get(LockFactory::class)->createLock($document->getLockKey());
+            self::$lock = OpenDxp::getContainer()->get(LockFactory::class)->createLock($document->getLockKey());
         }
 
         return self::$lock;
@@ -280,7 +271,6 @@ abstract class Processor
      * Returns the generated pdf file. Its path or data depending supplied parameter
      *
      * @param bool $returnFilePath return the path to the pdf file or the content
-     *
      */
     abstract public function getPdfFromString(string $html, array $params = [], bool $returnFilePath = false): string;
 }
