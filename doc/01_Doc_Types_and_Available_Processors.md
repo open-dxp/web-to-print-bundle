@@ -13,6 +13,7 @@ This bundle introduces 2 new document types:
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [Gotenberg](https://gotenberg.dev/) | A Docker service with Chromium and LibreOffice support                                                                                                     | 
 | [PDF Reactor](https://www.pdfreactor.com/) | A REST solution for rendering complex catalogs, please visit the official website for further information. Currently OpenDXP supports PDFreactor 10, 11, 12 | 
+| [Dompdf](https://github.com/dompdf/dompdf) | A PHP-based HTML to PDF converter. |
 
  > For details on how to install and configure these processors, please see [Additional Tools Installation](https://docs.opendxp.io/docs/core-framework/Installation_and_Upgrade/System_Setup_and_Hosting/Additional_Tools_Installation) page in the Core.
 
