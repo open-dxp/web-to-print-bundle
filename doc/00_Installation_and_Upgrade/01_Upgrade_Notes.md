@@ -1,5 +1,8 @@
 # Upgrade Notes
 
+## 1.1.0
+* Added new PDF processor [DomPdf](../01_Doc_Types_and_Available_Processors.md#available-pdf-processors) ([@PRinguinDevs](https://github.com/open-dxp/web-to-print-bundle/pull/5))
+
 ## Migrating from `pimcore/web-to-print-bundle` to `open-dxp/web-to-print-bundle`
 * Renamed bundle to `OpenDxpWebToPrintBundle` (composer package: `open-dxp/web-to-print-bundle`)
 * BC breaks
