@@ -10,7 +10,7 @@ declare(strict_types=1);
  * LICENSE.md which is distributed with this source code.
  *
  * @copyright  Copyright (c) Pimcore GmbH (https://pimcore.com)
- * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.ch)
+ * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.io)
  * @license    https://www.gnu.org/licenses/gpl-3.0.html  GNU General Public License version 3 (GPLv3)
  */
 
@@ -18,6 +18,8 @@ namespace OpenDxp\Bundle\WebToPrintBundle\Processor;
 
 use Dompdf\Dompdf as DompdfLib;
 use Dompdf\Options;
+use Exception;
+use OpenDxp;
 use OpenDxp\Bundle\WebToPrintBundle\Event\DocumentEvents;
 use OpenDxp\Bundle\WebToPrintBundle\Event\Model\PrintConfigEvent;
 use OpenDxp\Bundle\WebToPrintBundle\Model\Document\PrintAbstract;
@@ -44,11 +46,11 @@ class DomPdf extends Processor
             // Merge config into params for getPdfFromString
             $params = array_merge($params, (array) $config);
             $pdf = $this->getPdfFromString($html, $params);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Logger::error((string) $e);
             $document->setLastGenerateMessage($e->getMessage());
 
-            throw new \Exception('Error during PDF-Generation: ' . $e->getMessage());
+            throw new Exception('Error during PDF-Generation: ' . $e->getMessage());
         }
 
         $this->updateStatus($document->getId(), 100, 'saving_pdf_document');
@@ -81,7 +83,7 @@ class DomPdf extends Processor
         $event = new PrintConfigEvent($this, [
             'options' => $options,
         ]);
-        \OpenDxp::getEventDispatcher()->dispatch($event, DocumentEvents::PRINT_MODIFY_PROCESSING_OPTIONS);
+        OpenDxp::getEventDispatcher()->dispatch($event, DocumentEvents::PRINT_MODIFY_PROCESSING_OPTIONS);
 
         return (array) $event->getArguments()['options'];
     }
@@ -92,7 +94,7 @@ class DomPdf extends Processor
     public function getPdfFromString(string $html, array $params = [], bool $returnFilePath = false): string
     {
         if (!class_exists(DompdfLib::class)) {
-            throw new \Exception('Dompdf library is not installed. Please install it via "composer require dompdf/dompdf".');
+            throw new Exception('Dompdf library is not installed. Please install it via "composer require dompdf/dompdf".');
         }
 
         // Process HTML (Twig rendering if needed, absolute paths)

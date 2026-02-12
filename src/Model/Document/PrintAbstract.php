@@ -10,12 +10,13 @@ declare(strict_types=1);
  * LICENSE.md which is distributed with this source code.
  *
  * @copyright  Copyright (c) Pimcore GmbH (https://pimcore.com)
- * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.ch)
+ * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.io)
  * @license    https://www.gnu.org/licenses/gpl-3.0.html  GNU General Public License version 3 (GPLv3)
  */
 
 namespace OpenDxp\Bundle\WebToPrintBundle\Model\Document;
 
+use DateTime;
 use OpenDxp\Bundle\WebToPrintBundle\Processor;
 use OpenDxp\Model\Document\PageSnippet;
 use OpenDxp\Model\Document\Service;
@@ -28,31 +29,28 @@ abstract class PrintAbstract extends PageSnippet
 {
     /**
      * @internal
-     *
      */
     protected ?int $lastGenerated = null;
 
     /**
      * @internal
-     *
      */
     protected ?string $lastGenerateMessage = null;
 
     /**
      * @internal
-     *
      */
     protected ?string $controller = 'web2print';
 
-    public function setLastGeneratedDate(\DateTime $lastGenerated): void
+    public function setLastGeneratedDate(DateTime $lastGenerated): void
     {
         $this->lastGenerated = $lastGenerated->getTimestamp();
     }
 
-    public function getLastGeneratedDate(): ?\DateTime
+    public function getLastGeneratedDate(): ?DateTime
     {
         if ($this->lastGenerated) {
-            $date = new \DateTime();
+            $date = new DateTime();
             $date->setTimestamp($this->lastGenerated);
 
             return $date;
@@ -110,7 +108,6 @@ abstract class PrintAbstract extends PageSnippet
 
     /**
      * @internal
-     *
      */
     public function getLockKey(): string
     {

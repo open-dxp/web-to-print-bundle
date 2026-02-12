@@ -9,12 +9,13 @@
  * LICENSE.md which is distributed with this source code.
  *
  * @copyright  Copyright (c) Pimcore GmbH (https://pimcore.com)
- * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.ch)
+ * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.io)
  * @license    https://www.gnu.org/licenses/gpl-3.0.html  GNU General Public License version 3 (GPLv3)
  */
 
 namespace OpenDxp\Bundle\WebToPrintBundle\Model\Document\PrintAbstract;
 
+use Exception;
 use OpenDxp\Bundle\WebToPrintBundle\Model\Document\PrintAbstract;
 use OpenDxp\Db\Helper;
 use OpenDxp\Model\Document;
@@ -29,7 +30,6 @@ class Dao extends Document\PageSnippet\Dao
 {
     /**
      * Contains the valid database columns
-     *
      */
     protected array $validColumnsPage = [];
 
@@ -46,7 +46,7 @@ class Dao extends Document\PageSnippet\Dao
      * Get the data for the object by the given id, or by the id which is set in the object
      *
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getById(?int $id = null): void
     {
@@ -76,7 +76,7 @@ class Dao extends Document\PageSnippet\Dao
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function update(): void
     {
@@ -117,7 +117,7 @@ class Dao extends Document\PageSnippet\Dao
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function delete(): void
     {

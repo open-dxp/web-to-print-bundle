@@ -10,7 +10,7 @@ declare(strict_types=1);
  * LICENSE.md which is distributed with this source code.
  *
  * @copyright  Copyright (c) Pimcore GmbH (https://pimcore.com)
- * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.ch)
+ * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.io)
  * @license    https://www.gnu.org/licenses/gpl-3.0.html  GNU General Public License version 3 (GPLv3)
  */
 
@@ -21,12 +21,14 @@ use com\realobjects\pdfreactor\webservice\client\Encryption;
 use com\realobjects\pdfreactor\webservice\client\HttpsMode;
 use com\realobjects\pdfreactor\webservice\client\LogLevel;
 use com\realobjects\pdfreactor\webservice\client\ViewerPreferences;
+use OpenDxp;
 use OpenDxp\Bundle\WebToPrintBundle\Config;
 use OpenDxp\Bundle\WebToPrintBundle\Event\DocumentEvents;
 use OpenDxp\Bundle\WebToPrintBundle\Event\Model\PrintConfigEvent;
 use OpenDxp\Bundle\WebToPrintBundle\Model\Document\PrintAbstract;
 use OpenDxp\Bundle\WebToPrintBundle\Processor;
 use OpenDxp\Logger;
+use stdClass;
 
 class PdfReactor extends Processor
 {
@@ -39,8 +41,6 @@ class PdfReactor extends Processor
 
     /**
      * returns the default web2print config
-     *
-     *
      */
     protected function getConfig(object $config): array
     {
@@ -153,11 +153,11 @@ class PdfReactor extends Processor
         $reactorConfig['document'] = $this->processHtml($html, $params);
 
         $event = new PrintConfigEvent($this, ['config' => $config, 'reactorConfig' => $reactorConfig, 'document' => $document]);
-        \OpenDxp::getEventDispatcher()->dispatch($event, DocumentEvents::PRINT_MODIFY_PROCESSING_CONFIG);
+        OpenDxp::getEventDispatcher()->dispatch($event, DocumentEvents::PRINT_MODIFY_PROCESSING_CONFIG);
 
         $reactorConfig = $event->getArguments()['reactorConfig'];
 
-        $progress = new \stdClass();
+        $progress = new stdClass();
         $progress->finished = false;
 
         $connectionSettings = [];
@@ -234,7 +234,7 @@ class PdfReactor extends Processor
             'options' => $options,
         ]);
 
-        \OpenDxp::getEventDispatcher()->dispatch($event, DocumentEvents::PRINT_MODIFY_PROCESSING_OPTIONS);
+        OpenDxp::getEventDispatcher()->dispatch($event, DocumentEvents::PRINT_MODIFY_PROCESSING_OPTIONS);
 
         return (array)$event->getArguments()['options'];
     }

@@ -10,24 +10,26 @@ declare(strict_types=1);
  * LICENSE.md which is distributed with this source code.
  *
  * @copyright  Copyright (c) Pimcore GmbH (https://pimcore.com)
- * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.ch)
+ * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.io)
  * @license    https://www.gnu.org/licenses/gpl-3.0.html  GNU General Public License version 3 (GPLv3)
  */
 
 namespace OpenDxp\Bundle\WebToPrintBundle\Processor;
 
-use function array_merge;
-use function file_exists;
+use Exception;
 use Gotenberg\Gotenberg as GotenbergAPI;
 use Gotenberg\Stream;
-use function json_decode;
-use function key_exists;
+use OpenDxp;
 use OpenDxp\Bundle\WebToPrintBundle\Config;
 use OpenDxp\Bundle\WebToPrintBundle\Event\DocumentEvents;
 use OpenDxp\Bundle\WebToPrintBundle\Event\Model\PrintConfigEvent;
 use OpenDxp\Bundle\WebToPrintBundle\Model\Document\PrintAbstract;
 use OpenDxp\Bundle\WebToPrintBundle\Processor;
 use OpenDxp\Logger;
+use function array_merge;
+use function file_exists;
+use function json_decode;
+use function key_exists;
 
 class Gotenberg extends Processor
 {
@@ -46,11 +48,11 @@ class Gotenberg extends Processor
             $this->updateStatus($document->getId(), 50, 'pdf_conversion');
             $pdf = $this->getPdfFromString($html);
             $this->updateStatus($document->getId(), 100, 'saving_pdf_document');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Logger::error((string) $e);
             $document->setLastGenerateMessage($e->getMessage());
 
-            throw new \Exception('Error during PDF-Generation:' . $e->getMessage());
+            throw new Exception('Error during PDF-Generation:' . $e->getMessage());
         }
 
         $document->setLastGenerateMessage('');
@@ -66,7 +68,7 @@ class Gotenberg extends Processor
         $event = new PrintConfigEvent($this, [
             'options' => [],
         ]);
-        \OpenDxp::getEventDispatcher()->dispatch($event, DocumentEvents::PRINT_MODIFY_PROCESSING_OPTIONS);
+        OpenDxp::getEventDispatcher()->dispatch($event, DocumentEvents::PRINT_MODIFY_PROCESSING_OPTIONS);
 
         return (array)$event->getArgument('options');
     }
@@ -106,7 +108,7 @@ class Gotenberg extends Processor
             'html' => $html,
         ]);
 
-        \OpenDxp::getEventDispatcher()->dispatch($event, DocumentEvents::PRINT_MODIFY_PROCESSING_CONFIG);
+        OpenDxp::getEventDispatcher()->dispatch($event, DocumentEvents::PRINT_MODIFY_PROCESSING_CONFIG);
 
         ['html' => $html, 'params' => $params] = $event->getArguments();
 
