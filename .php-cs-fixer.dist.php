@@ -36,7 +36,7 @@ $config->setRules([
             'LICENSE.md which is distributed with this source code.' . PHP_EOL
             . PHP_EOL .
             '@copyright  Copyright (c) Pimcore GmbH (https://pimcore.com)' . PHP_EOL .
-            '@copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.ch)' . PHP_EOL .
+            '@copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.io)' . PHP_EOL .
             '@license    https://www.gnu.org/licenses/gpl-3.0.html  GNU General Public License version 3 (GPLv3)'
     ],
     'blank_line_before_statement'         => true,

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * OpenDXP
  *
@@ -12,11 +14,15 @@
  * @license    https://www.gnu.org/licenses/gpl-3.0.html  GNU General Public License version 3 (GPLv3)
  */
 
-namespace App;
+use OpenDxp\Bootstrap;
 
-use OpenDxp\Kernel as BaseKernel;
+require_once dirname(__DIR__) . '/vendor/autoload_runtime.php';
 
-class Kernel extends BaseKernel
-{
+Bootstrap::setProjectRoot();
 
-}
+return static function () {
+
+    Bootstrap::bootstrap();
+
+    return Bootstrap::kernel();
+};
