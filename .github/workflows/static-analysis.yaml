@@ -70,6 +70,7 @@ jobs:
         with:
             app_env: test
             opendxp_test: 1
+            composer_install_suggestions: true
             php_version: ${{ matrix.matrix.php-version }}
             symfony: ${{ matrix.matrix.symfony }}
             dependencies: ${{ matrix.matrix.dependencies }}
