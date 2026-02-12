@@ -24,7 +24,9 @@
     "dompdf/dompdf": "^3.0",
     "codeception/codeception": "^5.0.3",
     "codeception/module-symfony": "^3.1.0",
-    "codeception/phpunit-wrapper": "^9"
+    "codeception/phpunit-wrapper": "^9",
+    "symfony/dotenv": "^7.4",
+    "symfony/runtime": "^7.4"
   },
   "conflict": {
     "gotenberg/gotenberg-php": "<2.2.0"
