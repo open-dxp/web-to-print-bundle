@@ -1,46 +1,29 @@
 #!/usr/bin/env php
 <?php
 /**
- * Pimcore
+ * OpenDXP
  *
- * This source file is available under two different licenses:
- * - GNU General Public License version 3 (GPLv3)
- * - Pimcore Enterprise License (PEL)
+ * This source file is licensed under the GNU General Public License version 3 (GPLv3).
+ *
  * Full copyright and license information is available in
  * LICENSE.md which is distributed with this source code.
  *
- * @copyright  Copyright (c) Pimcore GmbH (http://www.pimcore.org)
- * @license    http://www.pimcore.org/license     GPLv3 and PEL
+ * @copyright  Copyright (c) Pimcore GmbH (https://pimcore.com)
+ * @copyright  Modification Copyright (c) OpenDXP (https://www.opendxp.ch)
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html  GNU General Public License version 3 (GPLv3)
  */
 
-ob_get_clean();
+use OpenDxp\Bootstrap;
+use OpenDxp\Console\Application;
 
-if (file_exists($a = getcwd() . '/vendor/autoload.php')) {
-    include $a;
-} elseif (file_exists($a = __DIR__ . '/../../../../vendor/autoload.php')) {
-    include $a;
-} elseif (file_exists($a = __DIR__ . '/../vendor/autoload.php')) {
-    include $a;
-} else {
-    fwrite(STDERR, 'Cannot locate autoloader; please run "composer install"' . PHP_EOL);
-    exit(1);
-}
+include __DIR__ . '/../vendor/autoload_runtime.php';
 
-\OpenDxp\Bootstrap::setProjectRoot();
-
+define('OPENDXP_PROJECT_ROOT', __DIR__ . '/..');
 define('OPENDXP_CONSOLE', true);
 
+return static function () {
 
-$input = new \Symfony\Component\Console\Input\ArgvInput();
-if (null !== $env = $input->getParameterOption(['--env', '-e'], null, true)) {
-    putenv('APP_ENV='.$_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $env);
-}
+    $kernel = Bootstrap::startupCli();
 
-if ($input->hasParameterOption('--no-debug', true)) {
-    putenv('APP_DEBUG='.$_SERVER['APP_DEBUG'] = $_ENV['APP_DEBUG'] = '0');
-}
-
-/** @var \OpenDxp\Kernel $kernel */
-$kernel = \OpenDxp\Bootstrap::startupCli();
-$application = new \OpenDxp\Console\Application($kernel);
-$application->run();
+    return new Application($kernel);
+};

@@ -28,6 +28,11 @@ class OpenDxpWebToPrintBundle extends AbstractOpenDxpBundle implements OpenDxpBu
     use BundleAdminClassicTrait;
     use PackageVersionTrait;
 
+    public function getComposerPackageName(): string
+    {
+        return 'open-dxp/web-to-print-bundle';
+    }
+
     public function getContainerExtension(): ?ExtensionInterface
     {
         if ($this->extension === null) {

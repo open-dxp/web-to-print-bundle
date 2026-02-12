@@ -30,7 +30,7 @@ final class OpenDxpWebToPrintExtension extends ConfigurableExtension implements 
         return 'opendxp_web_to_print';
     }
 
-    public function loadInternal(array $config, ContainerBuilder $container): void
+    public function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader(
             $container,
@@ -38,7 +38,7 @@ final class OpenDxpWebToPrintExtension extends ConfigurableExtension implements 
         );
 
         $loader->load('services.yaml');
-        $container->setParameter('opendxp_web_to_print', $config);
+        $container->setParameter('opendxp_web_to_print', $mergedConfig);
     }
 
     public function prepend(ContainerBuilder $container): void

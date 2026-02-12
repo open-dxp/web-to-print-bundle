@@ -1,8 +1,6 @@
 <?php
 
-use OpenDxp\Bundle\WebToPrintBundle\OpenDxpWebToPrintBundle;
-
 return [
-    'OpenDxp\\Bundle\\AdminBundle\\OpenDxpAdminBundle' => ['all' => true],
-    OpenDxpWebToPrintBundle::class => ['all' => true]
+    OpenDxp\Bundle\AdminBundle\OpenDxpAdminBundle::class => ['all' => true],
+    OpenDxp\Bundle\WebToPrintBundle\OpenDxpWebToPrintBundle::class => ['all' => true],
 ];

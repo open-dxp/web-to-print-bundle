@@ -1,11 +1,13 @@
-name: Codeception Tests [centralised]
+name: Static analysis [centralised]
 
 on:
     workflow_dispatch:
+    schedule:
+        -   cron: '0 3 * * 1,3,5'
     push:
         branches:
-            - "[0-9]+.[0-9]+"
-            - "[0-9]+.x"
+            - '[0-9]+.[0-9]+'
+            - '[0-9]+.x'
         paths-ignore:
             - 'doc/**'
     pull_request:
@@ -56,31 +58,25 @@ jobs:
       
                      matrix_json=$(jq -c --arg php_versions "$php_versions" \
                         '{matrix: [.configs[] | select(.php_version == $php_versions) | .matrix[]]}' \
-                        reusable-workflows/codeception-tests-configuration/matrix-config.json)
+                        reusable-workflows/phpstan-configuration/matrix-config.json)
                       
                      echo "matrix=${matrix_json}" >> $GITHUB_OUTPUT
 
-    codeception-tests:
+    static-analysis:
         needs: setup-matrix
         strategy:
             matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
-        uses: open-dxp/workflows-collection-public/.github/workflows/reusable-codeception-tests-centralized.yaml@main
+        uses: open-dxp/workflows-collection-public/.github/workflows/reusable-static-analysis-centralized.yaml@main
         with:
             app_env: test
             opendxp_test: 1
             composer_install_suggestions: true
-            install_ghostscript_and_pdfinfo: true
-            enable_gotenberg_service: true
             php_version: ${{ matrix.matrix.php-version }}
-            database: ${{ matrix.matrix.database }}
-            server_version: ${{ matrix.matrix.server_version }}
+            symfony: ${{ matrix.matrix.symfony }}
             dependencies: ${{ matrix.matrix.dependencies }}
             experimental: ${{ matrix.matrix.experimental }}
             opendxp_version: ${{ matrix.matrix.opendxp_version }}
             opendxp_admin_version: ${{ matrix.matrix.opendxp_admin_version }}
             composer_options: ${{ matrix.matrix.composer_options }}
             composer_root_version: ${{ matrix.matrix.composer_root_version || '1.99.9' }}
-        secrets:
-            CLA_ACTION_ACCESS_TOKEN: ${{ secrets.CLA_ACTION_ACCESS_TOKEN }}
-            SSH_PRIVATE_KEY_OPENDXP_DEPLOYMENTS_USER: ${{ secrets.SSH_PRIVATE_KEY_OPENDXP_DEPLOYMENTS_USER }}
-            COMPOSER_OPENDXP_REPO_PACKAGIST_TOKEN: ${{ secrets.COMPOSER_OPENDXP_REPO_PACKAGIST_TOKEN }}
+            cache_clear: true
