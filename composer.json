@@ -8,6 +8,9 @@
     "preferred-install": {
       "open-dxp/opendxp": "source",
       "*": "dist"
+    },
+    "allow-plugins": {
+      "symfony/runtime": true
     }
   },
   "prefer-stable": true,
