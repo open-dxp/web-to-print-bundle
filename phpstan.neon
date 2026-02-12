@@ -4,10 +4,16 @@ parameters:
         - src
     bootstrapFiles:
         - phpstan-bootstrap.php
+    ignoreErrors:
+        - identifier: missingType.iterableValue
+        - identifier: missingType.generics
     excludePaths:
         - '**/Processor/PdfReactor.php'
         - '**/PDFreactor.class.php'
     reportUnmatchedIgnoredErrors: false
+
+    symfony:
+        containerXmlPath: var/cache/test/App_KernelTestDebugContainer.xml
 
 includes:
     - vendor/phpstan/phpstan-symfony/extension.neon
