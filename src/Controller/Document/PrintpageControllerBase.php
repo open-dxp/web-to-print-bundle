@@ -180,8 +180,8 @@ abstract class PrintpageControllerBase extends DocumentControllerBase
 
         $className = OpenDxp::getContainer()->get('opendxp.class.resolver.document')->resolve($request->request->getString('type'));
 
+        /** @var Document $documentPrototype */
         $documentPrototype = OpenDxp::getContainer()->get('opendxp.model.factory')->build($className);
-        /** @var Document $document */
         $document = $documentPrototype::create($parentDocument->getId(), $createValues);
 
         try {
