@@ -31,22 +31,20 @@ use Twig\TwigFunction;
 
 class PrintCatalogExtension extends AbstractExtension
 {
-    protected Translator $translator;
-
     protected Placeholder $placeholderHelper;
 
     /**
      * PrintCatalogExtension constructor.
      */
-    public function __construct(Translator $translator, Placeholder $placeholderHelper)
+    public function __construct(protected Translator $translator, Placeholder $placeholderHelper)
     {
-        $this->translator = $translator;
         $this->placeholderHelper = $placeholderHelper;
     }
 
     /**
      * @return TwigFunction[]
      */
+    #[\Override]
     public function getFunctions(): array
     {
         return [
@@ -114,7 +112,7 @@ class PrintCatalogExtension extends AbstractExtension
         $result = [];
         if ($value) {
             foreach ($value as $v) {
-                $result[] = $this->translator->trans('attribute.' . strtolower($v));
+                $result[] = $this->translator->trans('attribute.' . strtolower((string) $v));
             }
         }
 
@@ -181,7 +179,7 @@ class PrintCatalogExtension extends AbstractExtension
     public static function toUrl(?string $text): string
     {
         // to ASCII
-        $text = trim(transliterator_transliterate('Any-Latin; Latin-ASCII; [^\u001F-\u007f] remove', $text));
+        $text = trim(transliterator_transliterate('Any-Latin; Latin-ASCII; [^\u001F-\u007f] remove', (string) $text));
 
         $search = ['?', '\'', '"', '/', '-', '+', '.', ',', ';', '(', ')', ' ', '&', 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß', 'É', 'é', 'È', 'è', 'Ê', 'ê', 'E', 'e', 'Ë', 'ë',
             'À', 'à', 'Á', 'á', 'Å', 'å', 'a', 'Â', 'â', 'Ã', 'ã', 'ª', 'Æ', 'æ', 'C', 'c', 'Ç', 'ç', 'C', 'c', 'Í', 'í', 'Ì', 'ì', 'Î', 'î', 'Ï', 'ï',

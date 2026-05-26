@@ -27,7 +27,7 @@ use OpenDxp\Model\Exception\ConfigWriteException;
  */
 final class Config
 {
-    private const CONFIG_ID = 'web_to_print';
+    private const string CONFIG_ID = 'web_to_print';
 
     private static ?LocationAwareConfigRepository $locationAwareConfigRepository = null;
 
@@ -86,11 +86,9 @@ final class Config
             throw new ConfigWriteException();
         }
 
-        $repository->saveConfig(self::CONFIG_ID, $data, function ($key, $data) {
-            return [
-                'opendxp_web_to_print' => $data,
-            ];
-        });
+        $repository->saveConfig(self::CONFIG_ID, $data, fn($key, $data) => [
+            'opendxp_web_to_print' => $data,
+        ]);
     }
 
     /**

@@ -15,7 +15,7 @@
   },
   "prefer-stable": true,
   "require": {
-    "php": "~8.3.0 || ~8.4.0",
+    "php": "~8.3.0 || ~8.4.0 || ~8.5.0",
     "doctrine/dbal": "^3.6",
     "open-dxp/admin-bundle": "^1.0",
     "open-dxp/opendxp": "^1.1"

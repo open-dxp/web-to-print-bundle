@@ -92,7 +92,7 @@ class SettingsController extends UserAwareController
             ];
         } elseif ($adapter instanceof Gotenberg) {
             $params = Config::getWeb2PrintConfig();
-            $params = json_decode($params['gotenbergSettings'], true) ?: [];
+            $params = json_decode((string) $params['gotenbergSettings'], true) ?: [];
         }
 
         $responseOptions = [

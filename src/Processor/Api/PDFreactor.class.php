@@ -17,32 +17,29 @@ namespace com\realobjects\pdfreactor\webservice\client;
 
 class PDFreactor
 {
-    private const ASYNC_503 = 'Asynchronous conversions are unavailable.';
+    private const string ASYNC_503 = 'Asynchronous conversions are unavailable.';
 
-    private const ERROR_400 = 'Invalid client data.';
+    private const string ERROR_400 = 'Invalid client data.';
 
-    private const ERROR_401 = 'Unauthorized.';
+    private const string ERROR_401 = 'Unauthorized.';
 
-    private const ERROR_404 = 'Document with the given ID was not found.';
+    private const string ERROR_404 = 'Document with the given ID was not found.';
 
-    private const ERROR_413 = 'The configuration is too large to process.';
+    private const string ERROR_413 = 'The configuration is too large to process.';
 
-    private const ERROR_429 = 'Too many requests made to the PDFreactor Web Service.';
+    private const string ERROR_429 = 'Too many requests made to the PDFreactor Web Service.';
 
-    private const ERROR_503 = 'PDFreactor Web Service is unavailable.';
-
-    private $url;
+    private const string ERROR_503 = 'PDFreactor Web Service is unavailable.';
 
     public $apiKey;
 
-    public function __construct($url = null)
+    public function __construct(private $url = null)
     {
-        $this->url = $url;
-        if ($url == null) {
+        if ($this->url == null) {
             $this->url = 'http://localhost:9423/service/rest';
         }
-        if (substr($this->url, -1) == '/') {
-            $this->url = substr($this->url, 0, -1);
+        if (str_ends_with((string) $this->url, '/')) {
+            $this->url = substr((string) $this->url, 0, -1);
         }
         $this->apiKey = null;
     }
@@ -87,7 +84,7 @@ class PDFreactor
                 }
             }
 
-            return json_decode($responseData['data']);
+            return json_decode((string) $responseData['data']);
         } catch (Exception $e) {
             if ($e instanceof PDFreactorWebserviceException) {
                 throw $e;
@@ -243,7 +240,7 @@ class PDFreactor
                 }
             }
 
-            return json_decode($responseData['data']);
+            return json_decode((string) $responseData['data']);
         } catch (Exception $e) {
             if ($e instanceof PDFreactorWebserviceException) {
                 throw $e;
@@ -292,7 +289,7 @@ class PDFreactor
                 }
             }
 
-            return json_decode($responseData['data']);
+            return json_decode((string) $responseData['data']);
         } catch (Exception $e) {
             if ($e instanceof PDFreactorWebserviceException) {
                 throw $e;
@@ -396,7 +393,7 @@ class PDFreactor
                 }
             }
 
-            return json_decode($responseData['data']);
+            return json_decode((string) $responseData['data']);
         } catch (Exception $e) {
             if ($e instanceof PDFreactorWebserviceException) {
                 throw $e;
@@ -445,7 +442,7 @@ class PDFreactor
                 }
             }
 
-            return json_decode($responseData['data']);
+            return json_decode((string) $responseData['data']);
         } catch (Exception $e) {
             if ($e instanceof PDFreactorWebserviceException) {
                 throw $e;
@@ -693,7 +690,7 @@ class PDFreactor
                 }
             }
 
-            return json_decode($responseData['data']);
+            return json_decode((string) $responseData['data']);
         } catch (Exception $e) {
             if ($e instanceof PDFreactorWebserviceException) {
                 throw $e;
@@ -818,7 +815,7 @@ class PDFreactor
         $cookieStr = '';
         if (!empty($connectionSettings) && !empty($connectionSettings['headers'])) {
             foreach ($connectionSettings['headers'] as $name => $value) {
-                $lcName = strtolower($name);
+                $lcName = strtolower((string) $name);
                 if ($lcName !== 'content-type' && $lcName !== 'content-length' && $lcName !== 'range') {
                     $headers[] = $name . ': ' . $value;
                 }
@@ -919,7 +916,6 @@ class PDFreactor
                 }
             }
         }
-        curl_close($curl);
         if ($errorMode && empty($error)) {
             if ($status == null || $status <= 0) {
                 $error = 'Could not connect to server.';
@@ -947,42 +943,27 @@ class PDFreactor
 
         if ($responseData != null) {
             $serverMessage = $responseData['error'];
-            $result = $responseData['data'] != null ? json_decode($responseData['data']) : null;
+            $result = $responseData['data'] != null ? json_decode((string) $responseData['data']) : null;
             $errorId = $responseData['errorId'];
         }
 
-        switch ($errorId) {
-            case 'asyncUnavailable':
-                return new AsyncUnavailableException($errorId, $clientMessage, $serverMessage, $result);
-            case 'badRequest':
-                return new BadRequestException($errorId, $clientMessage, $serverMessage, $result);
-            case 'conversionAborted':
-                return new ConversionAbortedException($errorId, $clientMessage, $serverMessage, $result);
-            case 'conversionFailure':
-                return new ConversionFailureException($errorId, $clientMessage, $serverMessage, $result);
-            case 'documentNotFound':
-                return new DocumentNotFoundException($errorId, $clientMessage, $serverMessage, $result);
-            case 'invalidClient':
-                return new InvalidClientException($errorId, $clientMessage, $serverMessage, $result);
-            case 'invalidConfiguration':
-                return new InvalidConfigurationException($errorId, $clientMessage, $serverMessage, $result);
-            case 'noConfiguration':
-                return new NoConfigurationException($errorId, $clientMessage, $serverMessage, $result);
-            case 'noInputDocument':
-                return new NoInputDocumentException($errorId, $clientMessage, $serverMessage, $result);
-            case 'notAcceptable':
-                return new NotAcceptableException($errorId, $clientMessage, $serverMessage, $result);
-            case 'serviceUnavailable':
-                return new ServiceUnavailableException($errorId, $clientMessage, $serverMessage, $result);
-            case 'unauthorized':
-                return new UnauthorizedException($errorId, $clientMessage, $serverMessage, $result);
-            case 'unprocessableConfiguration':
-                return new UnprocessableConfigurationException($errorId, $clientMessage, $serverMessage, $result);
-            case 'unprocessableInput':
-                return new UnprocessableInputException($errorId, $clientMessage, $serverMessage, $result);
-            default:
-                return new ServerException($errorId, $serverMessage, $result);
-        }
+        return match ($errorId) {
+            'asyncUnavailable' => new AsyncUnavailableException($errorId, $clientMessage, $serverMessage, $result),
+            'badRequest' => new BadRequestException($errorId, $clientMessage, $serverMessage, $result),
+            'conversionAborted' => new ConversionAbortedException($errorId, $clientMessage, $serverMessage, $result),
+            'conversionFailure' => new ConversionFailureException($errorId, $clientMessage, $serverMessage, $result),
+            'documentNotFound' => new DocumentNotFoundException($errorId, $clientMessage, $serverMessage, $result),
+            'invalidClient' => new InvalidClientException($errorId, $clientMessage, $serverMessage, $result),
+            'invalidConfiguration' => new InvalidConfigurationException($errorId, $clientMessage, $serverMessage, $result),
+            'noConfiguration' => new NoConfigurationException($errorId, $clientMessage, $serverMessage, $result),
+            'noInputDocument' => new NoInputDocumentException($errorId, $clientMessage, $serverMessage, $result),
+            'notAcceptable' => new NotAcceptableException($errorId, $clientMessage, $serverMessage, $result),
+            'serviceUnavailable' => new ServiceUnavailableException($errorId, $clientMessage, $serverMessage, $result),
+            'unauthorized' => new UnauthorizedException($errorId, $clientMessage, $serverMessage, $result),
+            'unprocessableConfiguration' => new UnprocessableConfigurationException($errorId, $clientMessage, $serverMessage, $result),
+            'unprocessableInput' => new UnprocessableInputException($errorId, $clientMessage, $serverMessage, $result),
+            default => new ServerException($errorId, $serverMessage, $result),
+        };
     }
 
     private function createAnonymousServerException($status)
@@ -1043,17 +1024,11 @@ class PDFreactorWebserviceException extends \Exception
  */
 class ServerException extends PDFreactorWebserviceException
 {
-    public $result;
-
-    public $errorId;
-
-    public function __construct($errorId = null, $clientMessage = null, $serverMessage = null, $result = null)
+    public function __construct(public $errorId = null, $clientMessage = null, $serverMessage = null, public $result = null)
     {
-        $this->result = $result;
-        $this->errorId = $errorId;
         $messages = [];
-        if ($serverMessage == null && $result != null) {
-            $serverMessage = $result->error;
+        if ($serverMessage == null && $this->result != null) {
+            $serverMessage = $this->result->error;
         }
         if ($clientMessage != null) {
             array_push($messages, $clientMessage);
@@ -1079,11 +1054,8 @@ class ServerException extends PDFreactorWebserviceException
  */
 class ClientException extends PDFreactorWebserviceException
 {
-    public $cause;
-
-    public function __construct($message, $cause = null)
+    public function __construct($message, public $cause = null)
     {
-        $this->cause = $cause;
         parent::__construct($message);
     }
 }

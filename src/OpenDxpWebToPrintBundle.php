@@ -34,6 +34,7 @@ class OpenDxpWebToPrintBundle extends AbstractOpenDxpBundle implements OpenDxpBu
         return 'open-dxp/web-to-print-bundle';
     }
 
+    #[\Override]
     public function getContainerExtension(): ?ExtensionInterface
     {
         if ($this->extension === null) {
@@ -67,6 +68,7 @@ class OpenDxpWebToPrintBundle extends AbstractOpenDxpBundle implements OpenDxpBu
         return $this->container->get(Installer::class);
     }
 
+    #[\Override]
     public function getPath(): string
     {
         return dirname(__DIR__);

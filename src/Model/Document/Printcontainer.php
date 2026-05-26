@@ -83,6 +83,7 @@ class Printcontainer extends PrintAbstract
         }
     }
 
+    #[\Override]
     public function pdfIsDirty(): bool
     {
         $dirty = parent::pdfIsDirty();

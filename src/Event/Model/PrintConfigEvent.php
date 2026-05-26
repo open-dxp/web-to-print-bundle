@@ -24,14 +24,11 @@ class PrintConfigEvent extends Event
 {
     use ArgumentsAwareTrait;
 
-    protected Processor $processor;
-
     /**
      * DocumentEvent constructor.
      */
-    public function __construct(Processor $processor, array $arguments = [])
+    public function __construct(protected Processor $processor, array $arguments = [])
     {
-        $this->processor = $processor;
         $this->arguments = $arguments;
     }
 

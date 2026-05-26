@@ -75,8 +75,8 @@ class PdfReactor extends Processor
         if (!empty($config->viewerPreference)) {
             $reactorConfig['viewerPreferences'] = [$config->viewerPreference];
         }
-        if (trim($web2PrintConfig['pdfreactorLicence'])) {
-            $reactorConfig['licenseKey'] = trim($web2PrintConfig['pdfreactorLicence']);
+        if (trim((string) $web2PrintConfig['pdfreactorLicence'])) {
+            $reactorConfig['licenseKey'] = trim((string) $web2PrintConfig['pdfreactorLicence']);
         }
 
         return $reactorConfig;
@@ -93,7 +93,7 @@ class PdfReactor extends Processor
         $pdfreactor = new \com\realobjects\pdfreactor\webservice\client\PDFreactor($protocol . '://' . $web2PrintConfig['pdfreactorServer'] . ':' . $port . '/service/rest');
 
         //if (trim($web2PrintConfig['pdfreactorApiKey'])) {
-        $pdfreactor->apiKey = trim($web2PrintConfig['pdfreactorApiKey']);
+        $pdfreactor->apiKey = trim((string) $web2PrintConfig['pdfreactorApiKey']);
         //}
 
         return $pdfreactor;
@@ -117,7 +117,7 @@ class PdfReactor extends Processor
 
         $reactorConfig['document'] = $this->processHtml($html, $params);
         $pdf = $pdfreactor->convert($reactorConfig);
-        $pdf = base64_decode($pdf->document);
+        $pdf = base64_decode((string) $pdf->document);
         if (!$returnFilePath) {
             return $pdf;
         } else {
@@ -174,7 +174,7 @@ class PdfReactor extends Processor
         $this->updateStatus($document->getId(), 100, 'saving_pdf_document');
         $result = $pdfreactor->getDocument($processId, $connectionSettings);
 
-        return base64_decode($result->document);
+        return base64_decode((string) $result->document);
     }
 
     /**
