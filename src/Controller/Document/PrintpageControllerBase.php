@@ -99,7 +99,7 @@ abstract class PrintpageControllerBase extends DocumentControllerBase
         if ($request->query->getString('task') !== self::TASK_SAVE) {
             //check, if to cleanup existing elements of document
             $config = Config::get();
-            if ($config['generalDocumentSaveMode'] == 'cleanup') {
+            if ($config['generalDocumentSaveMode'] === 'cleanup') {
                 $page->setEditables([]);
             }
         }
@@ -117,105 +117,96 @@ abstract class PrintpageControllerBase extends DocumentControllerBase
                 ],
                 'treeData' => $treeData,
             ]);
-        } else {
-            $draftData = [];
-            if ($version) {
-                $draftData = [
-                    'id' => $version->getId(),
-                    'modificationDate' => $version->getDate(),
-                    'isAutoSave' => $version->isAutoSave(),
-                ];
-            }
-
-            return $this->adminJson(['success' => true, 'draft' => $draftData]);
         }
+
+        $draftData = [];
+        if ($version) {
+            $draftData = [
+                'id' => $version->getId(),
+                'modificationDate' => $version->getDate(),
+                'isAutoSave' => $version->isAutoSave(),
+            ];
+        }
+
+        return $this->adminJson(['success' => true, 'draft' => $draftData]);
     }
 
     #[Route('/add', name: 'add', methods: ['POST'])]
     public function addAction(Request $request): JsonResponse
     {
-        $success = false;
-        $errorMessage = '';
-
-        // check for permission
         $parentDocument = Document::getById($request->request->getInt('parentId'));
-        $document = null;
-        if ($parentDocument->isAllowed('create')) {
-            $intendedPath = $parentDocument->getRealFullPath() . '/' . $request->request->getString('key');
 
-            if (!Document\Service::pathExists($intendedPath)) {
-                $createValues = [
-                    'userOwner' => $this->getAdminUser()->getId(),
-                    'userModification' => $this->getAdminUser()->getId(),
-                    'published' => false,
-                ];
+        if (!$parentDocument->isAllowed('create')) {
+            $message = 'prevented adding a document because of missing permissions';
+            Logger::debug($message);
 
-                $createValues['key'] = \OpenDxp\Model\Element\Service::getValidKey($request->request->getString('key'), 'document');
-
-                // check for a docType
-                $docType = Document\DocType::getById($request->request->getString('docTypeId'));
-                if ($docType) {
-                    $createValues['template'] = $docType->getTemplate();
-                    $createValues['controller'] = $docType->getController();
-                } else {
-                    $config = $this->getParameter('opendxp_web_to_print');
-                    if ($request->request->getString('type') === 'printpage') {
-                        $createValues['controller'] = $config['default_controller_print_page'];
-                    } elseif ($request->request->getString('type') === 'printcontainer') {
-                        $createValues['controller'] = $config['default_controller_print_container'];
-                    }
-                }
-
-                if ($request->request->has('inheritanceSource')) {
-                    $createValues['contentMainDocumentId'] = $request->request->getInt('inheritanceSource');
-                }
-
-                $className = OpenDxp::getContainer()->get('opendxp.class.resolver.document')->resolve($request->request->getString('type'));
-
-                /** @var Document $document */
-                $document = OpenDxp::getContainer()->get('opendxp.model.factory')->build($className);
-
-                $document = $document::create($parentDocument->getId(), $createValues);
-
-                try {
-                    $document->save();
-                    $success = true;
-                } catch (Exception $e) {
-                    return $this->adminJson(['success' => false, 'message' => $e->getMessage()]);
-                }
-            } else {
-                $errorMessage = "prevented adding a document because document with same path+key [ $intendedPath ] already exists";
-                Logger::debug($errorMessage);
-            }
-        } else {
-            $errorMessage = 'prevented adding a document because of missing permissions';
-            Logger::debug($errorMessage);
+            return $this->adminJson(['success' => false, 'message' => $message]);
         }
 
-        if ($success && $document instanceof Document) {
-            if ($translationsBaseDocumentId = $request->request->getInt('translationsBaseDocument')) {
-                $translationsBaseDocument = Document::getById($translationsBaseDocumentId);
+        $intendedPath = $parentDocument->getRealFullPath() . '/' . $request->request->getString('key');
 
-                $properties = $translationsBaseDocument->getProperties();
-                $properties = array_merge($properties, $document->getProperties());
-                $document->setProperties($properties);
-                $document->setProperty('language', 'text', $request->request->getString('language'), false, true);
-                $document->save();
+        if (Document\Service::pathExists($intendedPath)) {
+            $message = "prevented adding a document because document with same path+key [ $intendedPath ] already exists";
+            Logger::debug($message);
 
-                $service = new Document\Service();
-                $service->addTranslation($translationsBaseDocument, $document);
+            return $this->adminJson(['success' => false, 'message' => $message]);
+        }
+
+        $createValues = [
+            'userOwner' => $this->getAdminUser()->getId(),
+            'userModification' => $this->getAdminUser()->getId(),
+            'published' => false,
+        ];
+
+        $createValues['key'] = \OpenDxp\Model\Element\Service::getValidKey($request->request->getString('key'), 'document');
+
+        // check for a docType
+        $docType = Document\DocType::getById($request->request->getString('docTypeId'));
+        if ($docType) {
+            $createValues['template'] = $docType->getTemplate();
+            $createValues['controller'] = $docType->getController();
+        } else {
+            $config = $this->getParameter('opendxp_web_to_print');
+            if ($request->request->getString('type') === 'printpage') {
+                $createValues['controller'] = $config['default_controller_print_page'];
+            } elseif ($request->request->getString('type') === 'printcontainer') {
+                $createValues['controller'] = $config['default_controller_print_container'];
             }
+        }
 
-            return $this->adminJson([
-                'success' => $success,
-                'id' => $document->getId(),
-                'type' => $document->getType(),
-            ]);
+        if ($request->request->has('inheritanceSource')) {
+            $createValues['contentMainDocumentId'] = $request->request->getInt('inheritanceSource');
+        }
+
+        $className = OpenDxp::getContainer()->get('opendxp.class.resolver.document')->resolve($request->request->getString('type'));
+
+        $documentPrototype = OpenDxp::getContainer()->get('opendxp.model.factory')->build($className);
+        /** @var Document $document */
+        $document = $documentPrototype::create($parentDocument->getId(), $createValues);
+
+        try {
+            $document->save();
+        } catch (Exception $e) {
+            return $this->adminJson(['success' => false, 'message' => $e->getMessage()]);
+        }
+
+        if ($translationsBaseDocumentId = $request->request->getInt('translationsBaseDocument')) {
+            $translationsBaseDocument = Document::getById($translationsBaseDocumentId);
+
+            $properties = $translationsBaseDocument->getProperties();
+            $properties = array_merge($properties, $document->getProperties());
+            $document->setProperties($properties);
+            $document->setProperty('language', 'text', $request->request->getString('language'), false, true);
+            $document->save();
+
+            $service = new Document\Service();
+            $service->addTranslation($translationsBaseDocument, $document);
         }
 
         return $this->adminJson([
-            'success' => $success,
-            'message' => $errorMessage,
+            'success' => true,
+            'id' => $document->getId(),
+            'type' => $document->getType(),
         ]);
     }
 
@@ -279,9 +270,9 @@ abstract class PrintpageControllerBase extends DocumentControllerBase
             }
 
             return $response;
-        } else {
-            throw $this->createNotFoundException('File does not exist');
         }
+
+        throw $this->createNotFoundException('File does not exist');
     }
 
     /**
