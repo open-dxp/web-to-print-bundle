@@ -25,10 +25,8 @@ final class DocumentEvents
      *  - processor | instance of the PDF processor OpenDxp\Bundle\WebToPrintBundle\Processor\{ProcessorName}
      *
      * @Event("OpenDxp\Event\Model\DocumentEvent")
-     *
-     * @var string
      */
-    const PRINT_PRE_PDF_GENERATION = 'opendxp.document.print.prePdfGeneration';
+    const string PRINT_PRE_PDF_GENERATION = 'opendxp.document.print.prePdfGeneration';
 
     /**
      * Filename contains the filename of the generated pdf on filesystem, pdf contains generated pdf as string
@@ -38,10 +36,8 @@ final class DocumentEvents
      *  - pdf | contains generated pdf as string
      *
      * @Event("OpenDxp\Event\Model\DocumentEvent")
-     *
-     * @var string
      */
-    const PRINT_POST_PDF_GENERATION = 'opendxp.document.print.postPdfGeneration';
+    const string PRINT_POST_PDF_GENERATION = 'opendxp.document.print.postPdfGeneration';
 
     /**
      * Modify the processing options (displayed in the OpenDxp admin interface)
@@ -50,10 +46,8 @@ final class DocumentEvents
      *  - options | array for configuration settings
      *
      * @Event("OpenDxp\Bundle\WebToPrintBundle\Event\Model\PrintConfigEvent")
-     *
-     * @var string
      */
-    const PRINT_MODIFY_PROCESSING_OPTIONS = 'opendxp.document.print.processor.modifyProcessingOptions';
+    const string PRINT_MODIFY_PROCESSING_OPTIONS = 'opendxp.document.print.processor.modifyProcessingOptions';
 
     /**
      * Modify the configuration for the processor (when the pdf gets created)
@@ -67,8 +61,6 @@ final class DocumentEvents
      *
      *
      * @Event("OpenDxp\Bundle\WebToPrintBundle\Event\Model\PrintConfigEvent")
-     *
-     * @var string
      */
-    const PRINT_MODIFY_PROCESSING_CONFIG = 'opendxp.document.print.processor.modifyConfig';
+    const string PRINT_MODIFY_PROCESSING_CONFIG = 'opendxp.document.print.processor.modifyConfig';
 }

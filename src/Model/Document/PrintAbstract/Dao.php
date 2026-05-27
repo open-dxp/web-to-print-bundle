@@ -48,6 +48,7 @@ class Dao extends Document\PageSnippet\Dao
      *
      * @throws Exception
      */
+    #[\Override]
     public function getById(?int $id = null): void
     {
         if ($id !== null) {
@@ -66,6 +67,7 @@ class Dao extends Document\PageSnippet\Dao
         }
     }
 
+    #[\Override]
     public function create(): void
     {
         parent::create();
@@ -78,6 +80,7 @@ class Dao extends Document\PageSnippet\Dao
     /**
      * @throws Exception
      */
+    #[\Override]
     public function update(): void
     {
         $this->model->setModificationDate(time());
@@ -87,7 +90,7 @@ class Dao extends Document\PageSnippet\Dao
 
         foreach ($document as $key => $value) {
             // check if the getter exists
-            $getter = 'get' . ucfirst($key);
+            $getter = 'get' . ucfirst((string) $key);
             if (!method_exists($this->model, $getter)) {
                 continue;
             }
@@ -119,6 +122,7 @@ class Dao extends Document\PageSnippet\Dao
     /**
      * @throws Exception
      */
+    #[\Override]
     public function delete(): void
     {
         $this->deleteAllProperties();

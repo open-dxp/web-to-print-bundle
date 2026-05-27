@@ -28,18 +28,13 @@ use Twig\TwigTest;
  */
 class DocumentHelperExtensions extends AbstractExtension
 {
+    #[\Override]
     public function getTests(): array
     {
         return [
-            new TwigTest('opendxp_document_print', static function ($object) {
-                return $object instanceof PrintAbstract;
-            }),
-            new TwigTest('opendxp_document_print_container', static function ($object) {
-                return $object instanceof Printcontainer;
-            }),
-            new TwigTest('opendxp_document_print_page', static function ($object) {
-                return $object instanceof Printpage;
-            }),
+            new TwigTest('opendxp_document_print', static fn($object) => $object instanceof PrintAbstract),
+            new TwigTest('opendxp_document_print_container', static fn($object) => $object instanceof Printcontainer),
+            new TwigTest('opendxp_document_print_page', static fn($object) => $object instanceof Printpage),
         ];
     }
 }
