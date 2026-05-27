@@ -27,8 +27,10 @@ class PrintConfigEvent extends Event
     /**
      * DocumentEvent constructor.
      */
-    public function __construct(protected Processor $processor, array $arguments = [])
-    {
+    public function __construct(
+        protected Processor $processor,
+        array $arguments = []
+    ) {
         $this->arguments = $arguments;
     }
 

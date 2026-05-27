@@ -25,6 +25,7 @@ use OpenDxp\Model\DataObject\ClassDefinition\Data\Select;
 use OpenDxp\Model\Element\AbstractElement;
 use OpenDxp\Translation\Translator;
 use OpenDxp\Twig\Extension\Templating\Placeholder;
+use Override;
 use stdClass;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -40,7 +41,7 @@ class PrintCatalogExtension extends AbstractExtension
     /**
      * @return TwigFunction[]
      */
-    #[\Override]
+    #[Override]
     public function getFunctions(): array
     {
         return [

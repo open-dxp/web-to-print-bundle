@@ -21,6 +21,7 @@ use Exception;
 use OpenDxp\Db;
 use OpenDxp\Extension\Bundle\Installer\SettingsStoreAwareInstaller;
 use OpenDxp\Model\Tool\SettingsStore;
+use Override;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -50,7 +51,7 @@ class Installer extends SettingsStoreAwareInstaller
         'printcontainer',
     ];
 
-    #[\Override]
+    #[Override]
     public function install(): void
     {
         $this->installDatabaseTable();
@@ -60,7 +61,7 @@ class Installer extends SettingsStoreAwareInstaller
         parent::install();
     }
 
-    #[\Override]
+    #[Override]
     public function uninstall(): void
     {
         // Only remove permissions. Cleanup can be done by dev or command

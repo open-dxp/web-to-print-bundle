@@ -1024,8 +1024,12 @@ class PDFreactorWebserviceException extends \Exception
  */
 class ServerException extends PDFreactorWebserviceException
 {
-    public function __construct(public $errorId = null, $clientMessage = null, $serverMessage = null, public $result = null)
-    {
+    public function __construct(
+        public $errorId = null,
+        $clientMessage = null,
+        $serverMessage = null,
+        public $result = null
+    ) {
         $messages = [];
         if ($serverMessage == null && $this->result != null) {
             $serverMessage = $this->result->error;
@@ -1054,8 +1058,10 @@ class ServerException extends PDFreactorWebserviceException
  */
 class ClientException extends PDFreactorWebserviceException
 {
-    public function __construct($message, public $cause = null)
-    {
+    public function __construct(
+        $message,
+        public $cause = null
+    ) {
         parent::__construct($message);
     }
 }

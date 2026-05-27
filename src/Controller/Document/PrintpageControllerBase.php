@@ -70,7 +70,7 @@ abstract class PrintpageControllerBase extends DocumentControllerBase
 
         $data['url'] = $page->getUrl();
         $data['scheduledTasks'] = array_map(
-            static fn(Task $task) => $task->getObjectVars(),
+            static fn (Task $task) => $task->getObjectVars(),
             $page->getScheduledTasks()
         );
 

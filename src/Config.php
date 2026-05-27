@@ -86,7 +86,7 @@ final class Config
             throw new ConfigWriteException();
         }
 
-        $repository->saveConfig(self::CONFIG_ID, $data, fn($key, $data) => [
+        $repository->saveConfig(self::CONFIG_ID, $data, fn ($key, $data) => [
             'opendxp_web_to_print' => $data,
         ]);
     }

@@ -20,6 +20,7 @@ namespace OpenDxp\Bundle\WebToPrintBundle\Twig\Extension;
 use OpenDxp\Bundle\WebToPrintBundle\Model\Document\PrintAbstract;
 use OpenDxp\Bundle\WebToPrintBundle\Model\Document\Printcontainer;
 use OpenDxp\Bundle\WebToPrintBundle\Model\Document\Printpage;
+use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigTest;
 
@@ -28,13 +29,13 @@ use Twig\TwigTest;
  */
 class DocumentHelperExtensions extends AbstractExtension
 {
-    #[\Override]
+    #[Override]
     public function getTests(): array
     {
         return [
-            new TwigTest('opendxp_document_print', static fn($object) => $object instanceof PrintAbstract),
-            new TwigTest('opendxp_document_print_container', static fn($object) => $object instanceof Printcontainer),
-            new TwigTest('opendxp_document_print_page', static fn($object) => $object instanceof Printpage),
+            new TwigTest('opendxp_document_print', static fn ($object) => $object instanceof PrintAbstract),
+            new TwigTest('opendxp_document_print_container', static fn ($object) => $object instanceof Printcontainer),
+            new TwigTest('opendxp_document_print_page', static fn ($object) => $object instanceof Printpage),
         ];
     }
 }

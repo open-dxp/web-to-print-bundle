@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace OpenDxp\Bundle\WebToPrintBundle\Model\Document;
 
 use OpenDxp\Model\Document;
+use Override;
 
 /**
  * @method Printcontainer\Dao getDao()
@@ -83,7 +84,7 @@ class Printcontainer extends PrintAbstract
         }
     }
 
-    #[\Override]
+    #[Override]
     public function pdfIsDirty(): bool
     {
         $dirty = parent::pdfIsDirty();

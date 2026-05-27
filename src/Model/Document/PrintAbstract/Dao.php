@@ -20,6 +20,7 @@ use OpenDxp\Bundle\WebToPrintBundle\Model\Document\PrintAbstract;
 use OpenDxp\Db\Helper;
 use OpenDxp\Model\Document;
 use OpenDxp\Model\Exception\NotFoundException;
+use Override;
 
 /**
  * @internal
@@ -48,7 +49,7 @@ class Dao extends Document\PageSnippet\Dao
      *
      * @throws Exception
      */
-    #[\Override]
+    #[Override]
     public function getById(?int $id = null): void
     {
         if ($id !== null) {
@@ -67,7 +68,7 @@ class Dao extends Document\PageSnippet\Dao
         }
     }
 
-    #[\Override]
+    #[Override]
     public function create(): void
     {
         parent::create();
@@ -80,7 +81,7 @@ class Dao extends Document\PageSnippet\Dao
     /**
      * @throws Exception
      */
-    #[\Override]
+    #[Override]
     public function update(): void
     {
         $this->model->setModificationDate(time());
@@ -122,7 +123,7 @@ class Dao extends Document\PageSnippet\Dao
     /**
      * @throws Exception
      */
-    #[\Override]
+    #[Override]
     public function delete(): void
     {
         $this->deleteAllProperties();

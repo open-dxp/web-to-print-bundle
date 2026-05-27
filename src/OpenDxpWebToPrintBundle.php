@@ -21,6 +21,7 @@ use OpenDxp\Extension\Bundle\AbstractOpenDxpBundle;
 use OpenDxp\Extension\Bundle\OpenDxpBundleAdminClassicInterface;
 use OpenDxp\Extension\Bundle\Traits\BundleAdminClassicTrait;
 use OpenDxp\Extension\Bundle\Traits\PackageVersionTrait;
+use Override;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use function dirname;
 
@@ -34,7 +35,7 @@ class OpenDxpWebToPrintBundle extends AbstractOpenDxpBundle implements OpenDxpBu
         return 'open-dxp/web-to-print-bundle';
     }
 
-    #[\Override]
+    #[Override]
     public function getContainerExtension(): ?ExtensionInterface
     {
         if ($this->extension === null) {
@@ -68,7 +69,7 @@ class OpenDxpWebToPrintBundle extends AbstractOpenDxpBundle implements OpenDxpBu
         return $this->container->get(Installer::class);
     }
 
-    #[\Override]
+    #[Override]
     public function getPath(): string
     {
         return dirname(__DIR__);
