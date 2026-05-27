@@ -31,14 +31,10 @@ use Twig\TwigFunction;
 
 class PrintCatalogExtension extends AbstractExtension
 {
-    protected Placeholder $placeholderHelper;
-
-    /**
-     * PrintCatalogExtension constructor.
-     */
-    public function __construct(protected Translator $translator, Placeholder $placeholderHelper)
-    {
-        $this->placeholderHelper = $placeholderHelper;
+    public function __construct(
+        protected Translator $translator,
+        protected Placeholder $placeholderHelper
+    ) {
     }
 
     /**
