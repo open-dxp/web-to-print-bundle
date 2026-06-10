@@ -307,7 +307,7 @@ abstract class PrintpageControllerBase extends DocumentControllerBase
         return $this->adminJson(['success' => $result]);
     }
 
-    #[Route('/echeck-pdf-dirty', name: 'echeckpdfdirty', methods: ['GET'])]
+    #[Route('/check-pdf-dirty', name: 'checkpdfdirty', methods: ['GET'])]
     public function checkPdfDirtyAction(Request $request): JsonResponse
     {
         $printDocument = PrintAbstract::getById($request->query->getInt('id'));
