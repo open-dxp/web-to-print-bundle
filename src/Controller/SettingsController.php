@@ -16,96 +16,43 @@ declare(strict_types=1);
 
 namespace OpenDxp\Bundle\WebToPrintBundle\Controller;
 
-use OpenDxp\Bundle\WebToPrintBundle\Config;
-use OpenDxp\Bundle\WebToPrintBundle\Processor;
-use OpenDxp\Bundle\WebToPrintBundle\Processor\Gotenberg;
-use OpenDxp\Bundle\WebToPrintBundle\Processor\PdfReactor;
-use OpenDxp\Controller\Traits\JsonHelperTrait;
-use OpenDxp\Controller\UserAwareController;
+use OpenDxp\Bundle\AdminBundle\Controller\AdminAbstractController;
+use OpenDxp\Bundle\WebToPrintBundle\Handler\Settings\GetWeb2PrintSettings\GetWeb2PrintSettingsHandler;
+use OpenDxp\Bundle\WebToPrintBundle\Handler\Settings\SaveWeb2PrintSettings\SaveWeb2PrintSettingsHandler;
+use OpenDxp\Bundle\WebToPrintBundle\Handler\Settings\SaveWeb2PrintSettings\SaveWeb2PrintSettingsPayload;
+use OpenDxp\Bundle\WebToPrintBundle\Handler\Settings\TestWeb2PrintSettings\TestWeb2PrintSettingsHandler;
+use OpenDxp\Bundle\WebToPrintBundle\Security\Web2PrintPermission;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * @internal
  */
-#[Route('/settings')]
-class SettingsController extends UserAwareController
+#[IsGranted(Web2PrintPermission::Web2PrintSettings->value)]
+#[Route('/settings', name: 'opendxp_bundle_web2print_settings_')]
+class SettingsController extends AdminAbstractController
 {
-    use JsonHelperTrait;
-
-    #[Route('/get-web2print', name: 'opendxp_bundle_web2print_settings_getweb2print', methods: ['GET'])]
-    public function getWeb2printAction(Request $request): JsonResponse
+    #[Route('/get-web2print', name: 'getweb2print', methods: ['GET'])]
+    public function getWeb2printAction(GetWeb2PrintSettingsHandler $handler): JsonResponse
     {
-        $this->checkPermission('web2print_settings');
-
-        $valueArray = Config::getWeb2PrintConfig();
-
-        $response = [
-            'values' => $valueArray,
-        ];
-
-        return $this->jsonResponse($response);
+        return $this->apiJson($handler(), envelope: false);
     }
 
-    #[Route('/set-web2print', name: 'opendxp_bundle_web2print_settings_setweb2print', methods: ['PUT'])]
-    public function setWeb2printAction(Request $request): JsonResponse
-    {
-        $this->checkPermission('web2print_settings');
+    #[Route('/set-web2print', name: 'setweb2print', methods: ['PUT'])]
+    public function setWeb2printAction(
+        SaveWeb2PrintSettingsPayload $payload,
+        SaveWeb2PrintSettingsHandler $handler,
+    ): JsonResponse {
+        $handler($payload);
 
-        $values = $this->decodeJson($request->request->getString('data'));
-
-        unset(
-            $values['documentation'],
-            $values['requirements'],
-            $values['additions'],
-            $values['json_converter'],
-        );
-
-        Config::save($values);
-
-        return $this->jsonResponse(['success' => true]);
+        return $this->apiOk();
     }
 
-    #[Route('/test-web2print', name: 'opendxp_bundle_web2print_settings_testweb2print', methods: ['GET'])]
-    public function testWeb2printAction(Request $request): Response
+    #[Route('/test-web2print', name: 'testweb2print', methods: ['GET'])]
+    public function testWeb2printAction(TestWeb2PrintSettingsHandler $handler): Response
     {
-        $this->checkPermission('web2print_settings');
-
-        $response = $this->render('@OpenDxpWebToPrint/settings/test_web2print.html.twig');
-        $html = $response->getContent();
-
-        $adapter = Processor::getInstance();
-        $params = [];
-
-        if ($adapter instanceof PdfReactor) {
-            $params['adapterConfig'] = [
-                'javaScriptSettings' => [
-                    'enabled' => false,
-                ],
-                'addLinks' => true,
-                'appendLog' => true,
-                'debugSettings' => [
-                    'all' => true,
-                ],
-            ];
-        } elseif ($adapter instanceof Gotenberg) {
-            $params = Config::getWeb2PrintConfig();
-            $params = json_decode((string) $params['gotenbergSettings'], true) ?: [];
-        }
-
-        $responseOptions = [
-            'Content-Type' => 'application/pdf',
-        ];
-
-        $pdfData = $adapter->getPdfFromString($html, $params);
-
-        return new Response(
-            $pdfData,
-            200,
-            $responseOptions
-
-        );
+        return new Response($handler()->pdfData, 200, ['Content-Type' => 'application/pdf']);
     }
 }

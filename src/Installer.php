@@ -18,26 +18,24 @@ namespace OpenDxp\Bundle\WebToPrintBundle;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Exception;
+use OpenDxp\Bundle\WebToPrintBundle\Security\Web2PrintPermission;
 use OpenDxp\Db;
 use OpenDxp\Extension\Bundle\Installer\SettingsStoreAwareInstaller;
 use OpenDxp\Model\Tool\SettingsStore;
+use OpenDxp\Security\PermissionAttribute;
 use Override;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Installer extends SettingsStoreAwareInstaller
 {
-    protected const SETTINGS_STORE_SCOPE = 'opendxp_document_types';
+    protected const string SETTINGS_STORE_SCOPE = 'opendxp_document_types';
 
-    protected const DOCTYPES = ['printpage', 'printcontainer'];
+    protected const array DOCTYPES = ['printpage', 'printcontainer'];
 
-    protected const USER_PERMISSION_CATEGORY = 'OpenDxp Web2Print Bundle';
+    protected const string USER_PERMISSION_CATEGORY = 'OpenDxp Web2Print Bundle';
 
-    protected const USER_PERMISSIONS = [
-        'web2print_settings',
-    ];
-
-    protected const STANDARD_DOCUMENT_ENUM_TYPES = [
+    protected const array STANDARD_DOCUMENT_ENUM_TYPES = [
         'page',
         'link',
         'snippet',
@@ -46,7 +44,7 @@ class Installer extends SettingsStoreAwareInstaller
         'email',
     ];
 
-    protected const BUNDLE_EXTRA_DOCUMENT_ENUM_TYPES = [
+    protected const array BUNDLE_EXTRA_DOCUMENT_ENUM_TYPES = [
         'printpage',
         'printcontainer',
     ];
@@ -81,12 +79,14 @@ class Installer extends SettingsStoreAwareInstaller
     {
         $db = Db::get();
 
-        foreach (self::USER_PERMISSIONS as $permission) {
+        foreach (Web2PrintPermission::cases() as $permission) {
+            $key = PermissionAttribute::for($permission->value);
+
             // check if the permission already exists
-            $permissionExists = $db->executeStatement('SELECT `key` FROM users_permission_definitions WHERE `key` = :key', ['key' => $permission]);
+            $permissionExists = $db->executeStatement('SELECT `key` FROM users_permission_definitions WHERE `key` = :key', ['key' => $key]);
             if (!$permissionExists) {
                 $db->insert('users_permission_definitions', [
-                    $db->quoteIdentifier('key') => $permission,
+                    $db->quoteIdentifier('key') => $key,
                     $db->quoteIdentifier('category') => self::USER_PERMISSION_CATEGORY,
                 ]);
             }
@@ -97,9 +97,9 @@ class Installer extends SettingsStoreAwareInstaller
     {
         $db = Db::get();
 
-        foreach (self::USER_PERMISSIONS as $permission) {
+        foreach (Web2PrintPermission::cases() as $permission) {
             $db->delete('users_permission_definitions', [
-                $db->quoteIdentifier('key') => $permission,
+                $db->quoteIdentifier('key') => PermissionAttribute::for($permission->value),
             ]);
         }
     }

@@ -40,7 +40,10 @@ final class OpenDxpWebToPrintExtension extends ConfigurableExtension implements 
         );
 
         $loader->load('services.yaml');
+
         $container->setParameter('opendxp_web_to_print', $mergedConfig);
+        $container->setParameter('opendxp_web_to_print.default_controller_print_page', $mergedConfig['default_controller_print_page']);
+        $container->setParameter('opendxp_web_to_print.default_controller_print_container', $mergedConfig['default_controller_print_container']);
     }
 
     public function prepend(ContainerBuilder $container): void
