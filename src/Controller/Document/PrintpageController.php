@@ -22,6 +22,6 @@ use Symfony\Component\Routing\Attribute\Route;
  * @internal
  */
 #[Route('/printpage', name: 'opendxp_bundle_web2print_document_printpage_')]
-class PrintpageController extends PrintpageControllerBase
+class PrintpageController extends PrintDocumentControllerBase
 {
 }

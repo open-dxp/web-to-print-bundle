@@ -22,6 +22,24 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
+    #
+    # HANDLERS
+    #
+
+    OpenDxp\Bundle\WebToPrintBundle\Handler\:
+        resource: '../src/Handler'
+        bind:
+            $documentClassResolver: '@opendxp.class.resolver.document'
+            $defaultPrintPageController: '%opendxp_web_to_print.default_controller_print_page%'
+            $defaultPrintContainerController: '%opendxp_web_to_print.default_controller_print_container%'
+
+    #
+    # SERVICES
+    #
+
+    OpenDxp\Bundle\WebToPrintBundle\Service\:
+        resource: '../src/Service'
+
 
     # TWIG TEMPLATING
     OpenDxp\Bundle\WebToPrintBundle\Twig\Extension\DocumentHelperExtensions:

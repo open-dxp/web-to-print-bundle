@@ -14,14 +14,17 @@ declare(strict_types=1);
  * @license    https://www.gnu.org/licenses/gpl-3.0.html  GNU General Public License version 3 (GPLv3)
  */
 
-namespace OpenDxp\Bundle\WebToPrintBundle\Controller\Document;
+namespace OpenDxp\Bundle\WebToPrintBundle\Handler\Settings\GetWeb2PrintSettings;
 
-use Symfony\Component\Routing\Attribute\Route;
+use OpenDxp\Bundle\WebToPrintBundle\Config;
 
 /**
  * @internal
  */
-#[Route('/printcontainer', name: 'opendxp_bundle_web2print_document_printcontainer_')]
-class PrintcontainerController extends PrintDocumentControllerBase
+final class GetWeb2PrintSettingsHandler
 {
+    public function __invoke(): GetWeb2PrintSettingsResult
+    {
+        return new GetWeb2PrintSettingsResult(values: Config::getWeb2PrintConfig());
+    }
 }

@@ -14,14 +14,9 @@ declare(strict_types=1);
  * @license    https://www.gnu.org/licenses/gpl-3.0.html  GNU General Public License version 3 (GPLv3)
  */
 
-namespace OpenDxp\Bundle\WebToPrintBundle\Controller\Document;
+namespace OpenDxp\Bundle\WebToPrintBundle\Security;
 
-use Symfony\Component\Routing\Attribute\Route;
-
-/**
- * @internal
- */
-#[Route('/printcontainer', name: 'opendxp_bundle_web2print_document_printcontainer_')]
-class PrintcontainerController extends PrintDocumentControllerBase
+enum Web2PrintPermission: string
 {
+    case Web2PrintSettings = 'opendxp:security:permission:web2print_settings';
 }
