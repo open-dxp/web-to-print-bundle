@@ -13,5 +13,4 @@
 /.php-cs-fixer.cache export-ignore
 /CLA.md export-ignore
 /CONTRIBUTING.md export-ignore
-/codeception.dist.yml export-ignore
 /phpstan* export-ignore
