@@ -34,12 +34,10 @@ jobs:
             matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
         uses: open-dxp/workflows-collection-public/.github/workflows/reusable-static-analysis.yaml@main
         with:
-            composer_repository: 'https://open-dxp.repo.repman.io'
             php_version: ${{ matrix.matrix.php-version }}
             experimental: ${{ matrix.matrix.experimental }}
             opendxp_version: ${{ matrix.matrix.opendxp_version }}
         secrets:
             CLA_ACTION_ACCESS_TOKEN: ${{ secrets.CLA_ACTION_ACCESS_TOKEN }}
-            COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
             OPENDXP_INSTANCE_IDENTIFIER: ${{ secrets.OPENDXP_INSTANCE_IDENTIFIER }}
             OPENDXP_ENCRYPTION_SECRET: ${{ secrets.OPENDXP_ENCRYPTION_SECRET }}
