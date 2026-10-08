@@ -11,6 +11,7 @@
     </testsuites>
     <extensions>
         <bootstrap class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
+        <bootstrap class="Zenstruck\Foundry\PHPUnit\FoundryExtension"/>
     </extensions>
     <php>
         <env name="KERNEL_CLASS" value="OpenDxp\Bundle\WebToPrintBundle\Tests\Application\TestKernel"/>
