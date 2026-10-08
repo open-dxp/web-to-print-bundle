@@ -2,8 +2,8 @@ parameters:
     level: 6
     paths:
         - src
-    bootstrapFiles:
-        - phpstan-bootstrap.php
+    scanFiles:
+        - %currentWorkingDirectory%/vendor/open-dxp/opendxp/stubs/dynamic-constants.php
     ignoreErrors:
         - identifier: missingType.iterableValue
         - identifier: missingType.generics
@@ -13,8 +13,8 @@ parameters:
     reportUnmatchedIgnoredErrors: false
 
     symfony:
-        containerXmlPath: var/cache/test/App_KernelTestDebugContainer.xml
+        containerXmlPath: %currentWorkingDirectory%/var/cache/test/TestContainerDebug.xml
 
 includes:
-    - vendor/phpstan/phpstan-symfony/extension.neon
+    - %currentWorkingDirectory%/vendor/phpstan/phpstan-symfony/extension.neon
     - phpstan-baseline.neon

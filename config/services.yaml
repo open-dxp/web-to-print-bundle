@@ -28,6 +28,7 @@ services:
 
     OpenDxp\Bundle\WebToPrintBundle\Handler\:
         resource: '../src/Handler'
+        exclude: '../src/Handler/**/*{Payload,Result}.php'
         bind:
             $documentClassResolver: '@opendxp.class.resolver.document'
             $defaultPrintPageController: '%opendxp_web_to_print.default_controller_print_page%'

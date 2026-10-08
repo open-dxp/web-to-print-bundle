@@ -1,5 +1,10 @@
 # Upgrade Notes
 
+## 1.2.0
+* [BUGFIX] The payloads and results of the handlers are no longer registered as services. A container that makes its services public failed on them
+* [CHORE] Replace Codeception with Pest and `open-dxp/test-foundation`
+* [CHORE] Require `open-dxp/opendxp` ^1.5
+
 ## 1.1.0
 * Added new PDF processor [DomPdf](../01_Doc_Types_and_Available_Processors.md#available-pdf-processors) ([@PRinguinDevs](https://github.com/open-dxp/web-to-print-bundle/pull/5))
 

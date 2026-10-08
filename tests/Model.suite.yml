@@ -1,8 +1,0 @@
-actor: ModelTester
-modules:
-    enabled:
-        - \OpenDxp\Bundle\WebToPrintBundle\Tests\Helper\Model
-        - \OpenDxp\Tests\Support\Helper\OpenDxp:
-            connect_db: true
-            cache_router: false
-        - \OpenDxp\Tests\Support\Helper\ClassManager
