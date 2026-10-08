@@ -7,19 +7,36 @@ namespace OpenDxp\Bundle\WebToPrintBundle\Tests\Feature\Processor;
 use OpenDxp\Bundle\WebToPrintBundle\Processor\DomPdf;
 use OpenDxp\Document\Adapter\Ghostscript;
 
-it('renders the html into a pdf in the requested orientation', function (string $orientation, bool $wider) {
-    $pdf = (new DomPdf())->getPdfFromString((string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/print.html'), ['orientation' => $orientation]);
-
+function isWiderThanHigh(string $pdf): bool
+{
     preg_match('#/MediaBox \[\s*[\d.]+ [\d.]+ ([\d.]+) ([\d.]+)\s*\]#', $pdf, $mediaBox);
 
+    return (float) $mediaBox[1] > (float) $mediaBox[2];
+}
+
+function textOf(string $pdf): string
+{
     $file = tempnam(sys_get_temp_dir(), 'web2print');
     file_put_contents($file, $pdf);
 
-    expect($pdf)->toStartWith('%PDF-')
-        ->and((float) $mediaBox[1] > (float) $mediaBox[2])->toBe($wider)
-        ->and((new Ghostscript())->getText(null, null, $file))->toContain('Pellentesque habitant morbi tristique');
+    try {
+        return (string) (new Ghostscript())->getText(null, null, $file);
+    } finally {
+        unlink($file);
+    }
+}
 
-    unlink($file);
+it('renders the html into a pdf in the requested orientation', function (string $orientation, bool $wider) {
+    $html = (string) file_get_contents(dirname(__DIR__, 2) . '/Fixtures/print.html');
+
+    $pdf = (new DomPdf())->getPdfFromString($html, ['orientation' => $orientation]);
+
+    expect($pdf)
+        ->toStartWith('%PDF-')
+        ->and(isWiderThanHigh($pdf))
+        ->toBe($wider)
+        ->and(textOf($pdf))
+        ->toContain('Pellentesque habitant morbi tristique');
 })->with([
     'portrait' => ['portrait', false],
     'landscape' => ['landscape', true],
