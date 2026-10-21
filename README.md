@@ -23,7 +23,7 @@ Adds the ability to create web-to-print documents in OpenDXP and to convert them
 - Integrate different adapters to render documents to PDFs: Gotenberg, PDF reactor.
 
 ## Documentation Overview
-* [Installation](./doc/00_Installation.md)
+* [Installation](./doc/00_Installation_and_Upgrade/README.md)
 * [Document Types and Available PDF Processors](./doc/01_Doc_Types_and_Available_Processors.md)
 * [Print Documents](./doc/02_Print_Documents.md)
 * [Extending PDF Creation Config for PDF/X Conformance](./doc/90_Web2Print_Extending_Config_for_PDFX_conformance.md)
@@ -33,6 +33,11 @@ Adds the ability to create web-to-print documents in OpenDXP and to convert them
 For details see our [Contributing guide](https://github.com/pimcore/web-to-print-bundle/blob/1.x/CONTRIBUTING.md).
 
 ***
+
+## Changelog
+Before updating, please [check the changelog!](CHANGELOG.md)
+
+Coming from an earlier package? Read [Migrating to OpenDXP](doc/00_Installation_and_Upgrade/01_Migrating_to_OpenDXP.md).
 
 ## Upstream Origin & Version Transparency
 This project is a fork of the [Pimcore web-to-print-bundle (500df07 / v1.4.0)](https://github.com/pimcore/web-to-print-bundle/tree/500df07ca3055e300ab6fd9cc8254a405dd3e84f), which is © Pimcore GmbH and licensed under GPLv3.
