@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.1
+- [CHORE] Check dependencies, code and commits for security issues
+
 ## 1.2.0
 - [BUGFIX] The payloads and results of the handlers are no longer registered as services. A container that makes its services public failed on them
 - [CHORE] Replace Codeception with Pest and `open-dxp/test-foundation`
